@@ -36,10 +36,17 @@ jobs:
       - name: Upload coverage.xml
         uses: actions/upload-artifact@v2
         with:
-          name: tox-gh-actions-coverage
+          name: coverage-report
           path: coverage.xml
           if-no-files-found: error
 
-
-      - name: Upload coverage.xml to codecov
-        uses: codecov/codecov-action@v1
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v2
+        with:
+          directory: ./coverage/reports/
+          env_vars: OS,PYTHON
+          fail_ci_if_error: true
+          files: ./coverage1.xml,./coverage2.xml
+          name: codecov-umbrella
+          path_to_write_report: ./coverage/codecov_report.txt
+          verbose: true
