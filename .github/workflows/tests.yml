@@ -30,7 +30,7 @@ jobs:
 
       # https://tox.readthedocs.io/en/latest/
       - name: Test with tox
-        run: tox
+        run: tox -vv
 
       # https://github.com/actions/upload-artifact
       - name: Upload coverage.xml
