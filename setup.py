@@ -3,7 +3,7 @@ import pathlib
 
 here = pathlib.Path(__file__).parent.resolve()
 
-# Get the long description from the README file
+# Get the long description from the README.rst file
 long_description = (here / 'README.rst').read_text(encoding='utf-8')
 
 setup(
@@ -13,7 +13,7 @@ setup(
     author_email="scott.mccormack@quenda.io",
     description="Python library for conveyor design",
     long_description=long_description,
-    long_description_content_type="text/markdown",
+    long_description_content_type="text/x-rst",
     url="https://github.com/ScottMcCormack/conveyance",
     project_urls={
         "Bug Tracker": "https://github.com/ScottMcCormack/conveyance/issues",
