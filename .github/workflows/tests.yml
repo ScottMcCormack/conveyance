@@ -26,6 +26,7 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade setuptools pip wheel
+          python -m pip install tox
 
       # https://tox.readthedocs.io/en/latest/
       - name: Test with tox
