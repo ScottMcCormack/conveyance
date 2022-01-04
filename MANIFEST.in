@@ -1,6 +1,6 @@
+include .coveragerc
 include LICENSE
 include README.rst
-
+include requirements.txt
 include pyproject.toml
-
 include setup.py

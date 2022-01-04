@@ -1,0 +1,16 @@
+# https://github.com/pytest-dev/pytest-cov/blob/master/examples/src-layout/.coveragerc
+[paths]
+source =
+   src
+   */site-packages
+
+[run]
+branch = true
+parallel = true
+source =
+    conveyance
+    tests
+
+[report]
+show_missing = true
+precision = 2
