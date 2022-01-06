@@ -1,6 +1,26 @@
 import math
 
 
+def belt_capacity(belt_ca, v):
+    """
+    Calculate the theoretical flow rate of the conveyor
+
+    Parameters
+    ----------
+    belt_ca: float
+        Cross-sectional area of material of the belt (m^2)
+    v: float
+        Speed of the conveyor belt (m/s)
+
+    Returns
+    -------
+    float:
+        The theoretical flow rate of the conveyor (m^3/s)
+
+    """
+    return belt_ca * v
+
+
 def belt_ca(l3, b, ia, sa):
     """
     Calculate the cross-sectional area of material on the belt.
@@ -21,9 +41,7 @@ def belt_ca(l3, b, ia, sa):
     Returns
     -------
     float
-        The cross-sectional area of material on the belt (|m2|`)
-
-    ... |m2| replace:: m\ :sub:`2`\
+        The cross-sectional area of material on the belt (m^2)
 
     """
     s1 = _upper_belt_ca(l3, b, ia, sa)
