@@ -1,0 +1,26 @@
+name: "Linting"
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - "**"
+
+jobs:
+  styles:
+    runs-on: ubuntu-18.04
+    name: "Python Linting"
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+      - name: Install Python dependencies
+        uses: actions/setup-python@v1
+        with:
+          python-version: "3.6"
+      - run: pip install flake8
+      - name: Run flake8
+        uses: wearerequired/lint-action@v1
+        with:
+          flake8: true
