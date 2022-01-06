@@ -11,11 +11,11 @@ class TestSectionCapacity(unittest.TestCase):
         self.sa = 20
 
     def test_upper_belt_ca(self):
-        s1 = cross_section.upper_belt_ca(l3=self.l3, b=self.b, ia=self.ia, sa=self.sa)
+        s1 = cross_section._upper_belt_ca(l3=self.l3, b=self.b, ia=self.ia, sa=self.sa)
         self.assertAlmostEqual(s1, 0.0445, 4)
 
     def test_lower_belt_ca(self):
-        s1 = cross_section.lower_belt_ca(l3=self.l3, b=self.b, ia=self.ia)
+        s1 = cross_section._lower_belt_ca(l3=self.l3, b=self.b, ia=self.ia)
         self.assertAlmostEqual(s1, 0.1357, 4)
 
     def test_belt_ca(self):
