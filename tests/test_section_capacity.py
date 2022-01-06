@@ -28,6 +28,3 @@ class TestSectionCapacity(unittest.TestCase):
 
         q_vt = cross_section.belt_capacity(belt_ca=s, v=self.v)
         self.assertAlmostEqual(q_vt, 0.865, 3)
-
-
-
