@@ -21,7 +21,9 @@ def belt_ca(l3, b, ia, sa):
     Returns
     -------
     float
-        The cross-sectional area of material on the belt (m\ :sup:`2`)
+        The cross-sectional area of material on the belt (|m2|`)
+
+    ... |m2| replace:: m\ :sub:`2`\
 
     """
     s1 = _upper_belt_ca(l3, b, ia, sa)

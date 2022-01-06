@@ -21,4 +21,3 @@ class TestSectionCapacity(unittest.TestCase):
     def test_belt_ca(self):
         s = cross_section.belt_ca(l3=self.l3, b=self.b, ia=self.ia, sa=self.sa)
         self.assertAlmostEqual(s, 0.180, 3)
-
