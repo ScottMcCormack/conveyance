@@ -30,3 +30,24 @@ def mass_density_material(v, q=None, q_v=None, p=None):
         q_m = q_v * p * 1000 / v
 
     return q_m
+
+
+def mass_density_idler(a, m):
+    """
+    Calculate the mass of the idler per meter
+
+    Parameters
+    ----------
+    a: float
+        Idler spacing (m)
+    m: float
+        Idler mass (kg)
+
+    Returns
+    -------
+    float:
+        Mass per meter from idlers (kg/m)
+
+    """
+    q = m / a
+    return q
