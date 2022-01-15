@@ -5,7 +5,7 @@ from conveyance import cross_section
 
 class TestSectionCapacity(unittest.TestCase):
     def setUp(self):
-        # Cross-sectional dimensions
+        # Assume 3-roll configuration using coal
         self.l3 = 0.436
         self.b = 1.03
         self.ia = 45
@@ -23,8 +23,10 @@ class TestSectionCapacity(unittest.TestCase):
         self.assertAlmostEqual(s1, 0.1357, 4)
 
     def test_belt_capacity(self):
+        # Cross-sectional area of material on the belt
         s = cross_section.belt_ca(l3=self.l3, b=self.b, ia=self.ia, sa=self.sa)
         self.assertAlmostEqual(s, 0.180, 3)
 
+        # Flow rate of the conveyor
         q_vt = cross_section.belt_capacity(belt_ca=s, v=self.v)
         self.assertAlmostEqual(q_vt, 0.865, 3)
