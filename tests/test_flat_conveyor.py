@@ -29,8 +29,6 @@ class TestFlatConveyor(unittest.TestCase):
         self.install_a = 0  # Installation angle of the conveyor (deg)
         self.ff = 0.02  # Artificial friction factor (average operating conditions)
 
-
-
     def test_cross_sectional_capacity(self):
         """Test the cross-sectional properties of the conveyor"""
         s = cross_section.belt_ca(l3=self.l3, b=self.b, ia=self.ia, sa=self.sa)
