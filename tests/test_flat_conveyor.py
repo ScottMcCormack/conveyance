@@ -7,12 +7,15 @@ class TestFlatConveyor(unittest.TestCase):
     def setUp(self):
         # Assume 3-roll configuration using coal
         self.l3 = 0.436  # Width of the idler (3 roll set)
-        self.b = 1.03  # Width of max material on belt
-        self.ia = 45  # Idlers angle
-        self.sa = 20  # Material surcharge angle, coal
+        self.B = 1.2  # Total width of the belt (m)
+        self.b = 1.03  # Width of max material on belt (m)
+        self.ia = 45  # Idlers angle (deg)
+        self.sa = 20  # Material surcharge angle, coal (deg)
+        self.b1 = 0.75  # Width between skirtplates (m)
 
         # Vars for mass_density_material
         self.v = 4.8  # Belt speed (m/s)
+        self.v_0 = 0  # Speed of conveyed material (m/s)
         self.p = 0.85  # Density, coal (t/m^3)
         self.q_v = 0.864  # (m^3/s)
         self.q = 2300  # (t/h)
@@ -25,9 +28,12 @@ class TestFlatConveyor(unittest.TestCase):
 
         # Vars for conveyor resistances
         self.q_b = 16.44  # Belt mass (kg/m)
-        self.c_l = 143  # Center-to-centre length of the conveyor
+        self.c_l = 143  # Center-to-centre length of the conveyor (m)
         self.install_a = 0  # Installation angle of the conveyor (deg)
+        self.wrap_a = 90  # Wrap angle around the pulley (deg)
         self.ff = 0.02  # Artificial friction factor (average operating conditions)
+        self.mu1 = 0.5  # Coefficients between material/belt
+        self.mu2 = 0.7  # Coefficients between material/skirtplates
 
     def test_cross_sectional_capacity(self):
         """Test the cross-sectional properties of the conveyor"""
@@ -54,7 +60,33 @@ class TestFlatConveyor(unittest.TestCase):
         q_ru = belt_capacity.mass_density_idler(a=self.a_u, m=self.m_u)
         self.assertAlmostEqual(q_ru, 4.40, 2)  # q_ru: 4.40 kg/m
 
-        # Conveyor main resistance
-        f_m = conveyor_resistances.resistance_main(q_m=q_m, q_b=self.q_b, q_ro=q_ro, q_ru=q_ru,
+        # Fh: Conveyor main resistance
+        f_h = conveyor_resistances.resistance_main(q_m=q_m, q_b=self.q_b, q_ro=q_ro, q_ru=q_ru,
                                                    c_l=self.c_l, install_a=self.install_a, ff=self.ff)
-        self.assertAlmostEqual(f_m, 5142.73, 2)  # f_h:	5142.73 N
+        self.assertAlmostEqual(f_h, 5142.73, 2)  # f_h:	5142.73 N
+
+        # Fst: Resistance due to gravity of the conveyed material
+        f_st = conveyor_resistances.resistance_gravity(q_m=q_m, H=0)
+        self.assertAlmostEqual(f_st, 0, 0)  # f_st: 0.0 N
+
+        # Fba: Resistance due to inertial and frictional forces
+        q_v = belt_capacity.volume_carried_material(q=q, p=self.p)
+        f_ba = conveyor_resistances.resistance_inertial_friction(q_v=q_v, p=self.p, v=self.v, v_0=self.v_0)
+        self.assertAlmostEqual(f_ba, 3066.7, 1)  # f_ba: 3066.7 N
+
+        # Ff: Resistance between handled material and skirtplates in acceleration area
+        f_f = conveyor_resistances.resistance_material_acceleration(q_v=q_v, p=self.p, v=self.v, v_0=self.v_0,
+                                                                    b1=self.b1, mu1=self.mu1, mu2=self.mu2)
+        self.assertAlmostEqual(f_f, 2390.38, 2)  # f_f: 2390.38 N
+
+        # f_1t: Wrap resistance between the belt and the pulleys
+        f_1t = conveyor_resistances.resistance_belt_wrap(B=self.B, wrap_a=self.wrap_a)
+        self.assertAlmostEqual(f_1t, 360, 0)  # f_1t: 360 N
+
+        # f_n: Calculate secondary resistances (Fn)
+        f_n = conveyor_resistances.resistance_secondary(q_v=q_v, p=self.p, v=self.v, v_0=self.v_0,
+                                                        B=self.B, b1=self.b1, mu1=self.mu1, mu2=self.mu2,
+                                                        wrap_a_h=self.wrap_a, wrap_a_t=self.wrap_a)
+        f_n_expected = 6177.05  # f_n: 6177.05 N
+        self.assertAlmostEqual(f_n, f_n_expected, 2)
+        self.assertAlmostEqual(f_ba + f_f + (2 * f_1t), f_n_expected, 2)  # Sum previous components together

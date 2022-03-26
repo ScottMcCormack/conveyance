@@ -51,3 +51,23 @@ def mass_density_idler(a, m):
     """
     q = m / a
     return q
+
+def volume_carried_material(q, p):
+    """
+    Calculate the volume carried per second (m^3/s)
+
+    Parameters
+    ----------
+    q: float
+        Throughput of the conveyor (t/h)
+    p: float
+        Density of the material (t/m^3)
+
+    Returns
+    -------
+    float:
+        Volume per second of material carried (m^3/s)
+
+    """
+    q_v = (1000 * q) / (3600 * p * 1000)
+    return q_v
