@@ -1,6 +1,6 @@
 def mass_density_material(v, q=None, q_v=None, p=None):
     """
-    Calculate the mass of material on the conveyor
+    Calculate the mass of material on the conveyor (kg/m)
 
     In addition to providing `v`, it accepts either
     a throughput `q` or `q_v` flow rate and `p` material density
@@ -34,7 +34,7 @@ def mass_density_material(v, q=None, q_v=None, p=None):
 
 def mass_density_idler(a, m):
     """
-    Calculate the mass of the idler per meter
+    Calculate the mass of the idler per meter (kg/m)
 
     Parameters
     ----------

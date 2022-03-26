@@ -5,8 +5,7 @@ def resistance_main(q_m, q_b, q_ro, q_ru, c_l, install_a, ff):
     """
     Calculate the main resistance (Fh)
 
-    Includes the rotational resistances of the carry and return strands, identified by friction
-    coeffient
+    Includes the rotational resistances of the carry and return strands, identified by friction coefficient
 
     Parameters
     ----------
@@ -28,7 +27,7 @@ def resistance_main(q_m, q_b, q_ro, q_ru, c_l, install_a, ff):
     Returns
     -------
     float:
-        Main resistances to motion
+        Main resistances to motion (N)
 
     """
     f_h = ff * c_l * 9.81 * (q_ro + q_ru + (2 * q_b + q_m) * math.cos(math.radians(install_a)))
