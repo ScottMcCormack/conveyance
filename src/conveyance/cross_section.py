@@ -23,7 +23,7 @@ def belt_capacity(belt_ca, v):
 
 def belt_ca(l3, b, ia, sa):
     """
-    Calculate the cross-sectional area of material on the belt.
+    Calculate the cross-sectional area of material of the belt.
 
     A three-roll idler set is assumed.
 
@@ -44,19 +44,12 @@ def belt_ca(l3, b, ia, sa):
         The cross-sectional area of material on the belt (m^2)
 
     """
-    s1 = _upper_belt_ca(l3, b, ia, sa)
-    s2 = _lower_belt_ca(l3, b, ia)
-    return s1 + s2
-
-
-def _upper_belt_ca(l3, b, ia, sa):
     ia_r = math.radians(ia)
     sa_r = math.radians(sa)
+
+    # Upper half of the belt
     s1 = (1 / 6) * (l3 + (b - l3) * math.cos(ia_r)) ** 2 * math.tan(sa_r)
-    return s1
 
-
-def _lower_belt_ca(l3, b, ia):
-    ia_r = math.radians(ia)
+    # Lower half of the belt
     s2 = (l3 + ((b - l3) / 2) * math.cos(ia_r)) * (((b - l3) / 2) * math.sin(ia_r))
-    return s2
+    return s1 + s2
