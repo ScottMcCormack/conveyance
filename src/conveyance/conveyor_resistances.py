@@ -53,9 +53,9 @@ def resistance_secondary(q_v, p, v, v_0, B, b1, mu1, mu2, wrap_a_h, wrap_a_t):
     b1: float
         Width between skirtplates (m)
     mu1: float
-        Coefficients between material/belt
+        Friction coefficient between material/belt
     mu2: float
-        Coefficients between material/skirtplates
+        Friction coefficient between material/skirtplates
     wrap_a_h: float
         Wrap angle around the head pulley (deg)
     wrap_a_t: float
@@ -199,9 +199,9 @@ def resistance_material_acceleration(q_v, p, v, v_0, b1, mu1, mu2):
     b1: float
         Width between skirtplates (m)
     mu1: float
-        Coefficients between material/belt
+        Friction coefficient between material/belt
     mu2: float
-        Coefficients between material/skirtplates
+        Friction coefficients between material/skirtplates
 
     Returns
     -------
