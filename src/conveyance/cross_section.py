@@ -44,6 +44,7 @@ def belt_ca(l3, b, ia, sa):
         The cross-sectional area of material on the belt (m^2)
 
     """
+    # Convert deg inputs to radians
     ia_r = math.radians(ia)
     sa_r = math.radians(sa)
 
