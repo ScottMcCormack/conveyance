@@ -291,3 +291,39 @@ def resistance_belt_cleaners(bc_w, bc_t, bc_p, bc_n, mu3):
     """
     f_rc = bc_w * bc_t * bc_p * bc_n * mu3
     return f_rc
+
+
+def resistance_belt_sag_tension(q_m, q_b, a_o, a_u, h_a_o, h_a_u):
+    """
+    Calculate the minimum tensile force to limit belt sag between 2 sets of idlers on the carry side
+
+    Parameters
+    ----------
+    q_m: float
+        Mass per metre of material carried (kg/m)
+    q_b: float
+        Belt mass per meter (kg/m)
+    a_o: float
+        Idler spacing, carry (m)
+    a_u: float
+        Idler spacing, return (m)
+    h_a_o: float
+        Allowable belt sag between idlers, carry (m)
+    h_a_u: float
+        Allowable belt sag between idlers, return (m)
+
+    Returns
+    -------
+    float:
+        Carry side, minimum tensile force to limit belt sag between 2 sets of idlers (N)
+    float:
+        Return side, minimum tensile force to limit belt sag between 2 sets of idlers (N)
+
+    """
+    # Carry side
+    f_bs_min_o = (a_o * (q_b + q_m) * 9.81) / (8 * h_a_o)
+
+    # Return side
+    f_bs_min_u = (a_u * q_b * 9.81) / (8 * h_a_u)
+
+    return f_bs_min_o, f_bs_min_u

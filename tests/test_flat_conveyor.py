@@ -21,11 +21,13 @@ class TestFlatConveyor(unittest.TestCase):
         self.q_v = 0.864  # (m^3/s)
         self.q = 2300  # (t/h)
 
-        # Vars for mass_density_idler
+        # Vars for idlers
         self.a_o = 1.2  # Carry idler spacing (m)
         self.m_o = 15.5  # Carry idler mass (kg)
+        self.h_a_o = 0.01  # Allowable belt sag, carry side (m)
         self.a_u = 3.0  # Return idler spacing (m)
         self.m_u = 13.2  # Return idler mass (kg)
+        self.h_a_u = 0.02  # Allowable belt sag, return side (m)
 
         # Vars for conveyor resistances
         self.q_b = 16.44  # Belt mass (kg/m)
@@ -119,3 +121,9 @@ class TestFlatConveyor(unittest.TestCase):
         self.assertAlmostEqual(f_s, f_s_expected, 2)
         # Sum previous components together
         self.assertAlmostEqual(f_ep + f_gl + f_rc + f_a, f_s_expected, 2)
+
+        # Determine belt sag tension force
+        f_bs_min_o, f_bs_min_u = conveyor_resistances.resistance_belt_sag_tension(q_m=q_m, q_b=self.q_b, a_o=self.a_o, a_u=self.a_u,
+                                                                                  h_a_o=self.h_a_o, h_a_u=self.h_a_u)
+        self.assertAlmostEqual(f_bs_min_o, 22005, 0)  # f_bs_min_o: 22005 N
+        self.assertAlmostEqual(f_bs_min_u, 3024, 0)  # f_bs_min_o: 3024 N
