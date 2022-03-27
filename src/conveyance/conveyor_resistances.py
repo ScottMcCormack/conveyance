@@ -82,6 +82,57 @@ def resistance_secondary(q_v, p, v, v_0, B, b1, mu1, mu2, wrap_a_h, wrap_a_t):
     return f_n
 
 
+def resistance_concentrated(q_v, p, v, l_s, b1, bc_w, bc_t, bc_p, bc_n, mu2, mu3):
+    """
+    Calculate concentrated local resistances on the conveyor
+
+    Parameters
+    ----------
+    q_v: float
+        Volume per second of material carried (m^3/s)
+    p: float
+        Density of the material (t/m^3)
+    v: float
+        Speed of the conveyor belt (m/s)
+    l_s: float
+        Length of installation fitted with skirtplates (m)
+    b1: float
+        Width between skirtplates (m)
+    bc_w: float
+        Belt cleaner width (m)
+    bc_t: float
+        Belt cleaner thickness (m)
+    bc_p : float
+        Pressure between cleaner and belt (N/m^2)
+    bc_n : int
+        Number of belt cleaners
+    mu2: float
+        Friction coefficient between material/skirtplates
+    mu3: float
+        Friction coefficient between belt and cleaner
+
+    Returns
+    -------
+    float:
+        Conveyor concentrated resistances (N)
+
+    """
+    # Resistance due to idler tilting (Fep)
+    f_ep = 0  # No idler tilting
+
+    # Resistance due to friction between the material handled and skirt plates (FgL)
+    f_gl = resistance_material_skirtplates(q_v=q_v, p=p, v=v, l_s=l_s, b1=b1, mu2=mu2)
+
+    # Resistance due to belt cleaners fitted to the conveyor (Frc)
+    f_rc = resistance_belt_cleaners(bc_w=bc_w, bc_t=bc_t, bc_p=bc_p, bc_n=bc_n, mu3=mu3)
+
+    # Resistance due to friction at a discharge plough (Fa)
+    f_a = 0  # No discharge ploughs present
+
+    f_s = f_ep + f_gl + f_rc + f_a
+    return f_s
+
+
 def resistance_gravity(q_m, H):
     """
     Calculate the gravity forces from the conveyed material on the belt (FN)
@@ -184,3 +235,59 @@ def resistance_belt_wrap(B, wrap_a):
     alpha = 180 - wrap_a
     f_1t = 300 * B * math.sin(math.radians(alpha))
     return f_1t
+
+
+def resistance_material_skirtplates(q_v, p, v, l_s, b1, mu2):
+    """
+    Calculate the resistance due to friction between the material handled and skirt plates (FgL)
+
+    Parameters
+    ----------
+    q_v: float
+        Volume per second of material carried (m^3/s)
+    p: float
+        Density of the material (t/m^3)
+    v: float
+        Speed of the conveyor belt (m/s)
+    l_s: float
+        Length of installation fitted with skirtplates (m)
+    b1: float
+        Width between skirtplates (m)
+    mu2: float
+        Friction coefficients between material/skirtplates
+
+    Returns
+    -------
+    float:
+        Resistance due to friction between the material handled and skirt plates (N)
+
+    """
+    f_gl = (mu2 * (q_v ** 2) * (p * 1000) * 9.81 * l_s) / ((v ** 2) * (b1 ** 2))
+    return f_gl
+
+
+def resistance_belt_cleaners(bc_w, bc_t, bc_p, bc_n, mu3):
+    """
+    Calculate the friction resistance due to belt cleaners fitted to the conveyor (Frc)
+
+    Parameters
+    ----------
+    bc_w: float
+        Belt cleaner width (m)
+    bc_t: float
+        Belt cleaner thickness (m)
+    bc_p : float
+        Pressure between cleaner and belt (N/m^2)
+    bc_n : int
+        Number of belt cleaners
+    mu3: float
+        Friction coefficient between belt and cleaner
+
+    Returns
+    -------
+    float:
+        Friction resistance due to belt cleaners fitted to the conveyor (N)
+
+    """
+    f_rc = bc_w * bc_t * bc_p * bc_n * mu3
+    return f_rc

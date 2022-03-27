@@ -12,6 +12,7 @@ class TestFlatConveyor(unittest.TestCase):
         self.ia = 45  # Idlers angle (deg)
         self.sa = 20  # Material surcharge angle, coal (deg)
         self.b1 = 0.75  # Width between skirtplates (m)
+        self.l_s = 4.8  # Length of installation fitted with skirtplates (m)
 
         # Vars for mass_density_material
         self.v = 4.8  # Belt speed (m/s)
@@ -34,6 +35,13 @@ class TestFlatConveyor(unittest.TestCase):
         self.ff = 0.02  # Artificial friction factor (average operating conditions)
         self.mu1 = 0.5  # Coefficients between material/belt
         self.mu2 = 0.7  # Coefficients between material/skirtplates
+
+        # Vars for belt cleaners
+        self.bc_w = 1.2  # Belt cleaner width (m)
+        self.bc_t = 8 / 1000  # Belt cleaner thickness (m)
+        self.bc_p = 3 * 10 ** 4  # Pressure between cleaner and belt
+        self.bc_n = 4  # Number of belt cleaners (three at head end, one at tail end)
+        self.mu3 = 0.6  # Friction coefficient between belt and cleaner
 
     def test_cross_sectional_capacity(self):
         """Test the cross-sectional properties of the conveyor"""
@@ -89,4 +97,25 @@ class TestFlatConveyor(unittest.TestCase):
                                                         wrap_a_h=self.wrap_a, wrap_a_t=self.wrap_a)
         f_n_expected = 6177.05  # f_n: 6177.05 N
         self.assertAlmostEqual(f_n, f_n_expected, 2)
-        self.assertAlmostEqual(f_ba + f_f + (2 * f_1t), f_n_expected, 2)  # Sum previous components together
+        # Sum previous components together
+        self.assertAlmostEqual(f_ba + f_f + (2 * f_1t), f_n_expected, 2)
+
+        # f_gl: Resistance due to friction between the material handled and skirt plates
+        f_gl = conveyor_resistances.resistance_material_skirtplates(q_v=q_v, p=self.p, v=self.v, l_s=self.l_s, b1=self.b1, mu2=self.mu2)
+        self.assertAlmostEqual(f_gl, 1221.34, 2)  # f_gl: 1221.34 N
+
+        # f_rc: Friction resistance due to belt cleaners fitted to the conveyor
+        f_rc = conveyor_resistances.resistance_belt_cleaners(bc_w=self.bc_w, bc_t=self.bc_t, bc_p=self.bc_p,
+                                                             bc_n=self.bc_n, mu3=self.mu3)
+        self.assertAlmostEqual(f_rc, 691.2, 1)  # f_rc: 691.2 N
+
+        # f_s: Special resistances
+        f_ep = 0
+        f_a = 0
+        f_s_expected = 1912.54  # f_s: 1912.54 N
+        f_s = conveyor_resistances.resistance_concentrated(q_v=q_v, p=self.p, v=self.v, l_s=self.l_s, b1=self.b1,
+                                                           bc_w=self.bc_w, bc_t=self.bc_t, bc_p=self.bc_p,
+                                                           bc_n=self.bc_n, mu3=self.mu3, mu2=self.mu2)
+        self.assertAlmostEqual(f_s, f_s_expected, 2)
+        # Sum previous components together
+        self.assertAlmostEqual(f_ep + f_gl + f_rc + f_a, f_s_expected, 2)
