@@ -127,3 +127,6 @@ class TestFlatConveyor(unittest.TestCase):
                                                                                   h_a_o=self.h_a_o, h_a_u=self.h_a_u)
         self.assertAlmostEqual(f_bs_min_o, 22005, 0)  # f_bs_min_o: 22005 N
         self.assertAlmostEqual(f_bs_min_u, 3024, 0)  # f_bs_min_o: 3024 N
+
+        f_u = f_h + f_n + f_s + f_st
+        self.assertAlmostEqual(f_u, 13232.32, 0)  # f_u: 13232.32 N
