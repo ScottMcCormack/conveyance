@@ -33,7 +33,7 @@ class TestFlatConveyor(unittest.TestCase):
         self.q_b = 16.44  # Belt mass (kg/m)
         self.c_l = 143  # Center-to-centre length of the conveyor (m)
         self.install_a = 0  # Installation angle of the conveyor (deg)
-        self.wrap_a = 90  # Wrap angle around the pulley (deg)
+        self.wrap_a = 180  # Wrap angle around the pulley (deg)
         self.ff = 0.02  # Artificial friction factor (average operating conditions)
         self.mu1 = 0.5  # Coefficients between material/belt
         self.mu2 = 0.7  # Coefficients between material/skirtplates
