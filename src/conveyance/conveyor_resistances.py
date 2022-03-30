@@ -232,7 +232,9 @@ def resistance_belt_wrap(B, wrap_a):
         Resistance between the belt and pulley (N)
 
     """
-    alpha = 180 - wrap_a
+    # If alpha > 90, then sin(alpha) = 1
+    alpha = max([180 - wrap_a, 90])
+
     f_1t = 300 * B * math.sin(math.radians(alpha))
     return f_1t
 
