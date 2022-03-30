@@ -329,3 +329,47 @@ def resistance_belt_sag_tension(q_m, q_b, a_o, a_u, h_a_o, h_a_u):
     f_bs_min_u = (a_u * q_b * 9.81) / (8 * h_a_u)
 
     return f_bs_min_o, f_bs_min_u
+
+
+def tension_transmit_min(f_u, wrap_a, mu_b, acc_sd=3, t_2_min=None):
+    """
+    Ensure that a minimum tensile force is sufficient to transmit f_u
+
+    Parameters
+    ----------
+    f_u: float
+        Peripheral driving force on driving pulley (N)
+    wrap_a: float
+        Wrap angle around the pulley (deg)
+    mu_b: float
+        # Belt/Pulley friction coefficient
+    acc: int, optional
+        # Significant digit accuracy for checking the ratio (default: 3)
+    t_2_min: float, optional
+        # Minimum tensile force that must be maintained to transmit f_u, optional
+
+    Returns
+    -------
+    float:
+        t_1: Tensile force on belt (N)
+    float:
+        t_2: Tensile force on belt (N)
+    tuple:
+        (t_1 / t_2) >= e**(mu_b * wrap_rad)
+
+    """
+    wrap_rad = wrap_a * (math.pi / 180)
+    t_d_rat_min = math.exp(mu_b * wrap_rad)
+
+    # Set a value for t_2_min if not set
+    if t_2_min is None:
+        t_2_min = f_u / (t_d_rat_min - 1)
+
+    # t_1: Tensile force on the belt
+    t_1 = f_u + t_2_min
+
+    # Ensure the ratio (t_1 / t_2_min) >= e(mu_b * wrap_rad)
+    t_d_rat = t_1 / t_2_min
+    t_d_min_ok = round(t_d_rat, ndigits=acc_sd) >= round(t_d_rat_min, ndigits=acc_sd)
+
+    return t_1, t_2_min, (t_d_rat, t_d_rat_min, t_d_min_ok)

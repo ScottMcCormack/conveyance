@@ -1,6 +1,6 @@
 import unittest
 
-from conveyance import belt_capacity, conveyor_resistances, cross_section
+from conveyance import belt_capacity, conveyor_resistances, cross_section, power_requirements
 
 
 class TestFlatConveyor(unittest.TestCase):
@@ -44,6 +44,11 @@ class TestFlatConveyor(unittest.TestCase):
         self.bc_p = 3 * 10 ** 4  # Pressure between cleaner and belt
         self.bc_n = 4  # Number of belt cleaners (three at head end, one at tail end)
         self.mu3 = 0.6  # Friction coefficient between belt and cleaner
+
+        # Vars for drive pulley
+        self.d_eta_1 = 0.95  # Fluid coupling efficiency
+        self.d_eta_2 = 0.97  # Gearbox efficiency
+        self.mu_b = 0.3  # Belt/Pulley friction coefficient
 
     def test_cross_sectional_capacity(self):
         """Test the cross-sectional properties of the conveyor"""
@@ -128,5 +133,22 @@ class TestFlatConveyor(unittest.TestCase):
         self.assertAlmostEqual(f_bs_min_o, 22005, 0)  # f_bs_min_o: 22005 N
         self.assertAlmostEqual(f_bs_min_u, 3024, 0)  # f_bs_min_o: 3024 N
 
+        # f_u: Peripheral driving force on driving pulley
         f_u = f_h + f_n + f_s + f_st
-        self.assertAlmostEqual(f_u, 13232.32, 0)  # f_u: 13232.32 N
+        self.assertAlmostEqual(f_u, 13232.32, 2)  # f_u: 13232.32 N
+
+        # Calculate the drive motor power requirements
+        p_m = power_requirements.power_requirements_motor(f_u=f_u, v=self.v, d_eta_1=self.d_eta_1, d_eta_2=self.d_eta_2)
+        self.assertAlmostEqual(p_m / 1000, 68.93, 2)  # p_m: 68.93 kW
+
+        # Check the min tensile force to transmit f_u (drive pulley)
+        t_d = conveyor_resistances.tension_transmit_min(f_u=f_u, wrap_a=self.wrap_a, mu_b=self.mu_b)
+        self.assertAlmostEqual(t_d[0], 21680.28, 2)
+        self.assertAlmostEqual(t_d[1], 8447.96, 2)
+        self.assertTrue(t_d[2][2])  # (t_1 / t_2) >= e**(mu_b * wrap_rad)
+
+        # Check the min tensile force to avoid belt sag (tail pulley)
+        t_t = conveyor_resistances.tension_transmit_min(f_u=f_u, wrap_a=self.wrap_a, mu_b=self.mu_b, t_2_min=f_bs_min_o)
+        self.assertAlmostEqual(t_t[0], 35237.40, 2)
+        self.assertAlmostEqual(t_t[1], 22005.08, 2)
+        self.assertFalse(t_t[2][2])  # (t_1 / t_2) >= e**(mu_b * wrap_rad)
