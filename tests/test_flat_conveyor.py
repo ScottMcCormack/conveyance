@@ -19,8 +19,6 @@ class TestFlatConveyor(unittest.TestCase):
         self.v = 4.8  # Belt speed (m/s)
         self.v_0 = 0  # Speed of conveyed material (m/s)
         self.p = 0.85  # Density, coal (t/m^3)
-        self.q_v = 0.864  # (m^3/s)
-        self.q = 2300  # (t/h)
 
         # Vars for idlers
         self.a_o = 1.2  # Carry idler spacing (m)
