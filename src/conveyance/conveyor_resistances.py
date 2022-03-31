@@ -80,8 +80,10 @@ def resistance_secondary(q_v, p, v, v_0, B, b1, mu1, mu2, wrap_a_h, wrap_a_t,
                                            b1=b1, mu1=mu1, mu2=mu2)
 
     # Wrap resistance between the belt and the pulleys (F1t)
-    if not f_1t_d: f_1t_d = resistance_belt_wrap(B=B, wrap_a=wrap_a_h)  # Drive pulley
-    if not f_1t_t: f_1t_t = resistance_belt_wrap(B=B, wrap_a=wrap_a_t)  # Tail pulley
+    if not f_1t_d:
+        f_1t_d = resistance_belt_wrap(B=B, wrap_a=wrap_a_h)  # Drive pulley
+    if not f_1t_t:
+        f_1t_t = resistance_belt_wrap(B=B, wrap_a=wrap_a_t)  # Tail pulley
 
     f_n = f_ba + f_f + f_1t_d + f_1t_t
     return f_n
