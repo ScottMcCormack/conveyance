@@ -19,7 +19,7 @@ def power_requirements_motor(f_u, v, d_eta_1, d_eta_2):
         Power requirements for the drive motor (W)
 
     """
-    # p_a: Drive pulley power requirements
+    # p_a: Drive pulley power requirements (operating requirements)
     p_a = f_u * v
 
     # Drive efficiency

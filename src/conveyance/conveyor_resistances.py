@@ -351,9 +351,9 @@ def tension_transmit_min(f_u, wrap_a, mu_b, acc_sd=3, t_2_min=None):
     Returns
     -------
     float:
-        t_1: Tensile force on belt (N)
+        t_1: Tight-side tension at pulley (N)
     float:
-        t_2: Tensile force on belt (N)
+        t_2: Slack-side tension at pulley (N)
     tuple:
         (t_1 / t_2) >= e**(mu_b * wrap_rad)
 
@@ -365,7 +365,7 @@ def tension_transmit_min(f_u, wrap_a, mu_b, acc_sd=3, t_2_min=None):
     if t_2_min is None:
         t_2_min = f_u / (t_d_rat_min - 1)
 
-    # t_1: Tensile force on the belt
+    # t_1: Tight side tension at pulley
     t_1 = f_u + t_2_min
 
     # Ensure the ratio (t_1 / t_2_min) >= e(mu_b * wrap_rad)
