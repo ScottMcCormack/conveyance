@@ -34,7 +34,8 @@ def resistance_main(q_m, q_b, q_ro, q_ru, c_l, install_a, ff):
     return f_h
 
 
-def resistance_secondary(q_v, p, v, v_0, B, b1, mu1, mu2, wrap_a_h, wrap_a_t):
+def resistance_secondary(q_v, p, v, v_0, B, b1, mu1, mu2, wrap_a_h, wrap_a_t,
+                         f_1t_d=None, f_1t_t=None):
     """
     Calculate the conveyor secondary resistances (Fn)
 
@@ -60,6 +61,10 @@ def resistance_secondary(q_v, p, v, v_0, B, b1, mu1, mu2, wrap_a_h, wrap_a_t):
         Wrap angle around the head pulley (deg)
     wrap_a_t: float
         Wrap angle around the tail pulley (deg)
+    f_1t_d: float, optional
+        Wrap resistance between the belt and the drive pulley (N)
+    f_1t_t: float, optional
+        Wrap resistance between the belt and the tail pulley (N)
 
     Returns
     -------
@@ -75,10 +80,10 @@ def resistance_secondary(q_v, p, v, v_0, B, b1, mu1, mu2, wrap_a_h, wrap_a_t):
                                            b1=b1, mu1=mu1, mu2=mu2)
 
     # Wrap resistance between the belt and the pulleys (F1t)
-    f_1t_h = resistance_belt_wrap(B=B, wrap_a=wrap_a_h)  # Head pulley
-    f_1t_t = resistance_belt_wrap(B=B, wrap_a=wrap_a_t)  # Tail pulley
+    if not f_1t_d: f_1t_d = resistance_belt_wrap(B=B, wrap_a=wrap_a_h)  # Drive pulley
+    if not f_1t_t: f_1t_t = resistance_belt_wrap(B=B, wrap_a=wrap_a_t)  # Tail pulley
 
-    f_n = f_ba + f_f + f_1t_h + f_1t_t
+    f_n = f_ba + f_f + f_1t_d + f_1t_t
     return f_n
 
 
@@ -329,6 +334,46 @@ def resistance_belt_sag_tension(q_m, q_b, a_o, a_u, h_a_o, h_a_u):
     f_bs_min_u = (a_u * q_b * 9.81) / (8 * h_a_u)
 
     return f_bs_min_o, f_bs_min_u
+
+
+def resistance_belt_wrap_iso(B, d, D, d_0, m_p, t_1, t_2):
+    """
+    Calculate belt wrap resistance using values from ISO 5048
+
+    Parameters
+    ----------
+    B: float
+        Total width of belt (m)
+    d: float
+        Belt thickness (m)
+    d_0: float
+        Inside bearing diameter (m)
+    D: float
+        Pulley diameter (m)
+    m_p: float
+        Pulley mass (kg)
+    t_1: float
+        Tight-side tension at pulley (N)
+    t_2: float
+        Slack-side tension at pulley (N)
+
+    Returns
+    -------
+    float:
+        Wrap resistance between belt and pulley (N)
+
+
+    """
+    g = 9.81
+    # F: Average belt tension at the pulley
+    F = (t_1 + t_2) / 2
+
+    # f_1: Wrap resistance between belt and pulley
+    f_1 = 9 * B * (140 + (0.01 * F / B)) * d / D
+
+    # f_t: Pulley bearing resistance
+    f_t = 0.005 * (d_0 / D) * (((t_1 + t_2) ** 2) + (g * m_p) ** 2) ** (1 / 2)
+    return f_1 + f_t
 
 
 def tension_transmit_min(f_u, wrap_a, mu_b, acc_sd=3, t_2_min=None):

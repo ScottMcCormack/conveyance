@@ -8,6 +8,7 @@ class TestFlatConveyor(unittest.TestCase):
         # Assume 3-roll configuration using coal
         self.l3 = 0.436  # Width of the idler (3 roll set)
         self.B = 1.2  # Total width of the belt (m)
+        self.d = 0.0125  # Thickness of the belt (m)
         self.b = 1.03  # Width of max material on belt (m)
         self.ia = 45  # Idlers angle (deg)
         self.sa = 20  # Material surcharge angle, coal (deg)
@@ -49,6 +50,14 @@ class TestFlatConveyor(unittest.TestCase):
         self.d_eta_1 = 0.95  # Fluid coupling efficiency
         self.d_eta_2 = 0.97  # Gearbox efficiency
         self.mu_b = 0.3  # Belt/Pulley friction coefficient
+        self.d_0_d = 0.14  # Diameter of inside bearing
+        self.D_d = 0.6  # Drive pulley diameter
+        self.m_p_d = 1050  # Drive pulley mass
+
+        # Vars for tail pulley
+        self.d_0_t = 0.12  # Diameter of inside bearing
+        self.D_t = 0.5  # Tail pulley diameter
+        self.m_p_t = 800  # Tail pulley mass
 
     def test_cross_sectional_capacity(self):
         """Test the cross-sectional properties of the conveyor"""
@@ -142,13 +151,42 @@ class TestFlatConveyor(unittest.TestCase):
         self.assertAlmostEqual(p_m / 1000, 68.93, 2)  # p_m: 68.93 kW
 
         # Check the min tensile force to transmit f_u (drive pulley)
-        t_d = conveyor_resistances.tension_transmit_min(f_u=f_u, wrap_a=self.wrap_a, mu_b=self.mu_b)
-        self.assertAlmostEqual(t_d[0], 21680.28, 2)
-        self.assertAlmostEqual(t_d[1], 8447.96, 2)
-        self.assertTrue(t_d[2][2])  # (t_1 / t_2) >= e**(mu_b * wrap_rad)
+        t_d_1, t_d_2, t_d_rat = conveyor_resistances.tension_transmit_min(f_u=f_u, wrap_a=self.wrap_a, mu_b=self.mu_b)
+        self.assertAlmostEqual(t_d_1, 21680.28, 2)
+        self.assertAlmostEqual(t_d_2, 8447.96, 2)
+        self.assertTrue(t_d_rat[2])  # (t_1 / t_2) >= e**(mu_b * wrap_rad)
 
         # Check the min tensile force to avoid belt sag (tail pulley)
-        t_t = conveyor_resistances.tension_transmit_min(f_u=f_u, wrap_a=self.wrap_a, mu_b=self.mu_b, t_2_min=f_bs_min_o)
-        self.assertAlmostEqual(t_t[0], 35237.40, 2)
-        self.assertAlmostEqual(t_t[1], 22005.08, 2)
-        self.assertFalse(t_t[2][2])  # (t_1 / t_2) >= e**(mu_b * wrap_rad)
+        t_t_1, t_t_2, t_t_rat = conveyor_resistances.tension_transmit_min(f_u=f_u, wrap_a=self.wrap_a, mu_b=self.mu_b, t_2_min=f_bs_min_o)
+        self.assertAlmostEqual(t_t_1, 35237.40, 2)
+        self.assertAlmostEqual(t_t_2, 22005.08, 2)
+        self.assertFalse(t_t_rat[2])  # (t_1 / t_2) >= e**(mu_b * wrap_rad)
+
+        # Calculate precise values for wrap resistance using ISO 5048
+        # Drive pulley tension
+        f_1t_d = conveyor_resistances.resistance_belt_wrap_iso(B=self.B, d=self.d, D=self.D_d, d_0=self.d_0_d,
+                                                               m_p=self.m_p_d, t_1=t_t_1, t_2=t_t_2)
+        self.assertAlmostEqual(f_1t_d, 153, 0)  # 153 N
+
+        # Tail pulley tension
+        f_1t_t = conveyor_resistances.resistance_belt_wrap_iso(B=self.B, d=self.d, D=self.D_t, d_0=self.d_0_t,
+                                                               m_p=self.m_p_t, t_1=t_t_2, t_2=t_t_2)
+        self.assertAlmostEqual(f_1t_t, 141, 0)  # 141 N
+
+        # Recalculate resistances
+        f_n = conveyor_resistances.resistance_secondary(q_v=q_v, p=self.p, v=self.v, v_0=self.v_0,
+                                                        B=self.B, b1=self.b1, mu1=self.mu1, mu2=self.mu2,
+                                                        wrap_a_h=self.wrap_a, wrap_a_t=self.wrap_a,
+                                                        f_1t_d=f_1t_d, f_1t_t=f_1t_t)
+        f_n_expected = 5751  # f_n: 5751 N
+        self.assertAlmostEqual(f_n, f_n_expected, 0)
+        # Sum previous components together
+        self.assertAlmostEqual(f_ba + f_f + f_1t_d + f_1t_t, f_n_expected, 0)
+
+        # f_u: Peripheral driving force on driving pulley
+        f_u = f_h + f_n + f_s + f_st
+        self.assertAlmostEqual(f_u, 12806, 0)  # f_u: 12806 N
+
+        # Recalculate the drive motor power requirements
+        p_m = power_requirements.power_requirements_motor(f_u=f_u, v=self.v, d_eta_1=self.d_eta_1, d_eta_2=self.d_eta_2)
+        self.assertAlmostEqual(p_m / 1000, 66.71, 2)  # p_m: 68.93 kW
