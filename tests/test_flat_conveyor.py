@@ -5,57 +5,8 @@ from conveyance import belt_capacity, conveyor_resistances, power_requirements
 
 class TestFlatConveyor(unittest.TestCase):
     def setUp(self):
-        # Assume 3-roll configuration using coal
-        self.l3 = 0.436  # Width of the idler (3 roll set)
-        self.B = 1.2  # Total width of the belt (m)
-        self.d = 0.0125  # Thickness of the belt (m)
-        self.b = 1.03  # Width of max material on belt (m)
-        self.ia = 45  # Idlers angle (deg)
-        self.sa = 20  # Material surcharge angle, coal (deg)
-        self.b1 = 0.75  # Width between skirtplates (m)
-        self.l_s = 4.8  # Length of installation fitted with skirtplates (m)
-
-        # Vars for mass_density_material
-        self.v = 4.8  # Belt speed (m/s)
-        self.v_0 = 0  # Speed of conveyed material (m/s)
-        self.p = 0.85  # Density, coal (t/m^3)
-
-        # Vars for idlers
-        self.a_o = 1.2  # Carry idler spacing (m)
-        self.m_o = 15.5  # Carry idler mass (kg)
-        self.h_a_o = 0.01  # Allowable belt sag, carry side (m)
-        self.a_u = 3.0  # Return idler spacing (m)
-        self.m_u = 13.2  # Return idler mass (kg)
-        self.h_a_u = 0.02  # Allowable belt sag, return side (m)
-
-        # Vars for conveyor resistances
-        self.q_b = 16.44  # Belt mass (kg/m)
-        self.c_l = 143  # Center-to-centre length of the conveyor (m)
-        self.install_a = 0  # Installation angle of the conveyor (deg)
-        self.wrap_a = 180  # Wrap angle around the pulley (deg)
-        self.ff = 0.02  # Artificial friction factor (average operating conditions)
-        self.mu1 = 0.5  # Coefficients between material/belt
-        self.mu2 = 0.7  # Coefficients between material/skirtplates
-
-        # Vars for belt cleaners
-        self.bc_w = 1.2  # Belt cleaner width (m)
-        self.bc_t = 8 / 1000  # Belt cleaner thickness (m)
-        self.bc_p = 3 * 10 ** 4  # Pressure between cleaner and belt
-        self.bc_n = 4  # Number of belt cleaners (three at head end, one at tail end)
-        self.mu3 = 0.6  # Friction coefficient between belt and cleaner
-
-        # Vars for drive pulley
-        self.d_eta_1 = 0.95  # Fluid coupling efficiency
-        self.d_eta_2 = 0.97  # Gearbox efficiency
-        self.mu_b = 0.3  # Belt/Pulley friction coefficient
-        self.d_0_d = 0.14  # Diameter of inside bearing
-        self.D_d = 0.6  # Drive pulley diameter
-        self.m_p_d = 1050  # Drive pulley mass
-
-        # Vars for tail pulley
-        self.d_0_t = 0.12  # Diameter of inside bearing
-        self.D_t = 0.5  # Tail pulley diameter
-        self.m_p_t = 800  # Tail pulley mass
+        # Load from file
+        pass
 
     def test_cross_sectional_capacity(self):
         """Test the cross-sectional properties of the conveyor"""
