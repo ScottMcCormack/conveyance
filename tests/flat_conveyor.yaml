@@ -48,5 +48,5 @@ conveyor_design:
   belt_cleaners:
     bc_n: 4  # Number of belt cleaners (three at head end, one at tail end)
     bc_w: 1.2  # Belt cleaner width (m)
-    bc_t: 8 / 1000  # Belt cleaner thickness (m)
-    bc_p: 3 * 10 ** 4  # Pressure between cleaner and belt
+    bc_t: 0.008  # Belt cleaner thickness (m)
+    bc_p: 30000  # Pressure between cleaner and belt
