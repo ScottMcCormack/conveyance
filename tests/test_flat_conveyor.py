@@ -1,3 +1,4 @@
+import os
 import unittest
 
 from conveyance import belt_capacity, conveyance, conveyor_resistances, power_requirements
@@ -5,7 +6,7 @@ from conveyance import belt_capacity, conveyance, conveyor_resistances, power_re
 
 class TestFlatConveyor(unittest.TestCase):
     def setUp(self):
-        self.file_path = 'flat_conveyor.yaml'
+        self.file_path = os.path.join(os.path.dirname(__file__), 'flat_conveyor.yaml')
         self.c = conveyance.Conveyance(file_path=self.file_path)
 
     def test_cross_sectional_capacity(self):
