@@ -2,11 +2,31 @@ import yaml
 
 
 class Conveyance:
-    def __init__(self, file_path):
-        # Load from file
-        self.file_loader(file_path=file_path)
+    """Class used for conveyor design.
 
-    def file_loader(self, file_path):
+    .. versionadded:: 0.1.0
+
+    Attributes
+    ----------
+    file_path : str
+        Path to file containing the design parameters for the conveyor.
+
+    """
+
+    def __init__(self, file_path):
+        self._file_loader(file_path=file_path)
+
+    def _file_loader(self, file_path):
+        """Load design parameters from YAML file
+
+        .. versionadded:: 0.1.0
+
+        Parameters
+        ----------
+        file_path : str
+            Path to file to load
+
+        """
         with open(file_path, 'r') as stream:
             d: dict = yaml.safe_load(stream=stream)
 
