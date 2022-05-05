@@ -1,0 +1,52 @@
+version: 1.0
+conveyor_design:
+  material:
+    p: 0.85  # Density, coal (t/m^3)
+    sa: 20  # Material surcharge angle, coal (deg)
+  operation:
+    v: 4.8  # Belt speed (m/s)
+    v_0: 0  # Speed of conveyed material (m/s)
+    c_l: 143  # Center-to-centre length of the conveyor (m)
+    install_a: 0  # Installation angle of the conveyor (deg)
+    wrap_a: 180  # Wrap angle around the pulley (deg)
+  coefficients:
+    ff: 0.02  # Artificial friction factor (average operating conditions)
+    mu1: 0.5  # Coefficients between material/belt
+    mu2: 0.7  # Coefficients between material/skirtplates
+    mu3: 0.6  # Friction coefficient between belt and cleaner
+    mu_b: 0.3  # Belt/Pulley friction coefficient
+    d_eta_1: 0.95  # Fluid coupling efficiency
+    d_eta_2: 0.97  # Gearbox efficiency
+  belt:
+    B: 1.2  # Total width of the belt (m)
+    b: 1.03  # Width of max material on belt (m)
+    d: 0.0125  # Thickness of the belt (m)
+    q_b: 16.44  # Belt mass (kg/m)
+  pulley:
+    drive:
+      d_0: 0.14  # Diameter of inside bearing (m)
+      D: 0.6  # Drive pulley diameter (m)
+      m_p: 1050  # Drive pulley mass (kg)
+    tail:
+      d_0: 0.12  # Diameter of inside bearing (m)
+      D: 0.5  # Tail pulley diameter (m)
+      m_p: 800  # Tail pulley mass (kg)
+  idler:
+    carry:
+      a_o: 1.2  # Carry idler spacing (m)
+      m_o: 15.5  # Carry idler mass (kg)
+      h_a_o: 0.01  # Allowable belt sag, carry side (m)
+      l3: 0.436  # Width of the idler (3 roll set)
+      ia: 45  # Idlers angle (deg)
+    return:
+      a_u: 3.0  # Return idler spacing (m)
+      m_u: 13.2  # Return idler mass (kg)
+      h_a_u: 0.02  # Allowable belt sag, return side (m)
+  skirtplates:
+    b1: 0.75  # Width between skirtplates (m)
+    l_s: 4.8  # Length of installation fitted with skirtplates (m)
+  belt_cleaners:
+    bc_n: 4  # Number of belt cleaners (three at head end, one at tail end)
+    bc_w: 1.2  # Belt cleaner width (m)
+    bc_t: 0.008  # Belt cleaner thickness (m)
+    bc_p: 30000  # Pressure between cleaner and belt
