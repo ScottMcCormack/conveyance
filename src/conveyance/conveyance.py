@@ -17,14 +17,14 @@ class Conveyance:
         self._file_loader(file_path=file_path)
 
     def _file_loader(self, file_path):
-        """Load design parameters from YAML file
+        """Load the design parameters from a YAML file.
 
         .. versionadded:: 0.1.0
 
         Parameters
         ----------
         file_path : str
-            Path to file to load
+            Path to YAML file
 
         """
         with open(file_path, 'r') as stream:
