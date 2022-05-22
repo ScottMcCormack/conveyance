@@ -88,16 +88,3 @@ this part of the documentation is for you.
    :maxdepth: 2
 
    api
-
-The Contributor Guide
----------------------
-
-If you want to contribute to the project, this part of the documentation is for
-you.
-
-.. toctree::
-   :maxdepth: 3
-
-   dev/contributing
-   dev/authors
-
