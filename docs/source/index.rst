@@ -1,7 +1,7 @@
 .. conveyance documentation master file, created by
-   sphinx-quickstart on Thu May  5 22:24:15 2022.
-   You can adapt this file completely to your liking, but it should at least
-   contain the root `toctree` directive.
+sphinx-quickstart on Thu May  5 22:24:15 2022.
+You can adapt this file completely to your liking, but it should at least
+contain the root `toctree` directive.
 
 conveyance: Conveyor design
 ===========================
@@ -60,9 +60,6 @@ instructions for getting the most out of conveyance.
 
    user/install
    user/quickstart
-   user/advanced
-   user/authentication
-
 
 The Community Guide
 -------------------
@@ -95,7 +92,6 @@ this part of the documentation is for you.
    :maxdepth: 2
 
    api
-
 
 The Contributor Guide
 ---------------------
