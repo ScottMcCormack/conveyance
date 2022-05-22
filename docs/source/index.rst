@@ -4,7 +4,7 @@
    contain the root `toctree` directive.
 
 conveyance: Conveyor design
-==========================
+===========================
 
 Release v\ |version|. (:ref:`Installation <install>`)
 
