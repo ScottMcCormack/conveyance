@@ -13,8 +13,8 @@
 import os
 import sys
 
-sys.path.insert(0, os.path.abspath(os.path.join('..', '..', 'src'))                )
-import conveyance
+sys.path.insert(0, os.path.abspath(os.path.join('..', '..', 'src')))
+import conveyance  # noqa: E402, F401
 
 # -- Project information -----------------------------------------------------
 
