@@ -3,6 +3,4 @@
 Quickstart
 ==========
 
-.. module:: conveyance
-
 TODO
