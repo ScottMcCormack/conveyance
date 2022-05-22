@@ -1,7 +1,7 @@
 .. conveyance documentation master file, created by
-sphinx-quickstart on Thu May  5 22:24:15 2022.
-You can adapt this file completely to your liking, but it should at least
-contain the root `toctree` directive.
+    sphinx-quickstart on Thu May  5 22:24:15 2022.
+    You can adapt this file completely to your liking, but it should at least
+    contain the root `toctree` directive.
 
 conveyance: Conveyor design
 ===========================
@@ -70,11 +70,7 @@ conveyance ecosystem and community.
 .. toctree::
    :maxdepth: 2
 
-   community/recommended
-   community/faq
-   community/out-there
    community/support
-   community/vulnerabilities
    community/release-process
 
 .. toctree::
@@ -104,3 +100,4 @@ you.
 
    dev/contributing
    dev/authors
+
