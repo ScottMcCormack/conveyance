@@ -33,9 +33,6 @@ Release v\ |version|. (:ref:`Installation <install>`)
 
     >>> ...
 
-See `similar code, sans conveyance <https://gist.github.com/973705>`_.
-
-
 **conveyance** ...
 
 Beloved Features
@@ -45,7 +42,7 @@ conveyance is ...
 
 - ...
 
-conveyance officially supports Python 3.x+, and runs great on PyPy.
+conveyance officially supports Python 3.6+, and runs great on PyPy.
 
 
 The User Guide
