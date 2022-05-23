@@ -6,3 +6,4 @@ include pyproject.toml
 include setup.py
 
 recursive-exclude notebooks *.ipynb
+recursive-exclude docs *
