@@ -9,6 +9,9 @@ ScottMcCormack/conveyance
 .. image:: https://codecov.io/gh/ScottMcCormack/conveyance/branch/main/graph/badge.svg?token=1NL5ZSMAJR
      :target: https://codecov.io/gh/ScottMcCormack/conveyance
 
+.. image:: https://readthedocs.org/projects/conveyance/badge/?version=latest
+    :target: https://conveyance.readthedocs.io/en/latest/?badge=latest
+    :alt: Documentation Status
 
 ``conveyance`` is a python library used for conveyor design and research.
 
