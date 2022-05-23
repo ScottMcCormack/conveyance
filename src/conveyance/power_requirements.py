@@ -1,19 +1,17 @@
 def power_requirements_motor(f_u, v, d_eta_1, d_eta_2):
     """
-    Calculate the power requirements for the drive motor (P\ :sub:`A`\)
-
+    Calculate the power requirements for the drive motor (PA)
 
     Parameters
     ----------
     f_u: float
-       f\ :sub:`u`\  : Peripheral driving force on driving pulley (N)
+       Peripheral driving force on driving pulley (N)
     v: float
-        v : Speed of the conveyor belt (m/s)
+        Speed of the conveyor belt (m/s)
     d_eta_1: float
         Fluid coupling efficiency
     d_eta_2: float
         Gearbox efficiency
-
 
     Returns
     -------

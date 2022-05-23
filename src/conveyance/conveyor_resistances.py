@@ -380,31 +380,29 @@ def resistance_belt_wrap_iso(B, d, D, d_0, m_p, t_1, t_2):
 
 def tension_transmit_min(f_u, wrap_a, mu_b, acc_sd=3, t_2_min=None):
     """
-    Ensure that a minimum tensile force is sufficient to transmit f\ :sub:`u`\
-
+    Ensure that a minimum tensile force is sufficient to transmit f_u
 
     Parameters
     ----------
     f_u: float
-        f\ :sub:`u`\ : Peripheral driving force on driving pulley (N)
+        Peripheral driving force on driving pulley (N)
     wrap_a: float
         Wrap angle around the pulley (deg)
     mu_b: float
-        mu\ :sub:`b`\ : Belt/Pulley friction coefficient
+        # Belt/Pulley friction coefficient
     acc: int, optional
-        Significant digit accuracy for checking the ratio (default: 3)
+        # Significant digit accuracy for checking the ratio (default: 3)
     t_2_min: float, optional
-        t\ :sub:`2,min`\ : Minimum tensile force that must be maintained to transmit f\ :sub:`u`\
-
+        # Minimum tensile force that must be maintained to transmit f_u, optional
 
     Returns
     -------
     float:
-        t\ :sub:`1`\ : Tight-side tension at pulley (N)
+        t_1: Tight-side tension at pulley (N)
     float:
-        t\ :sub:`2`\ : Slack-side tension at pulley (N)
+        t_2: Slack-side tension at pulley (N)
     tuple:
-        (t\ :sub:`1`\ / t\ :sub:`2`\) >= e**(mu\ :sub:`b`\ * wrap_rad)
+        (t_1 / t_2) >= e**(mu_b * wrap_rad)
 
     """
     wrap_rad = wrap_a * (math.pi / 180)
