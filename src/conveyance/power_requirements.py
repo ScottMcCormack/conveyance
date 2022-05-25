@@ -2,7 +2,8 @@ def power_requirements_motor(f_u, v, d_eta_1, d_eta_2):
     """
     Calculate the power requirements for the drive motor (:math:`P_A`)
 
-        :math:`P_A = \\dfrac{f_u * v}{\\eta_1 * \\eta_2}`
+        .. math::
+            P_A = \\dfrac{f_u * v}{\\eta_1 * \\eta_2}
 
     Parameters
     ----------

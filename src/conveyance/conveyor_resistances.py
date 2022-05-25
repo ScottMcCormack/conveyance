@@ -342,28 +342,37 @@ def resistance_belt_wrap_iso(B, d, D, d_0, m_p, t_1, t_2):
     """
     Calculate belt wrap resistance using values from ISO 5048
 
+        .. math::
+            F_T    & = ((T_1 + T_2) * (g * m_p))^{1/2} \\\\
+            F_t    & = 0.005 * (d_0 / D) * F_T \\\\
+            F_1    & = 9 * B * (140 + 0.01 (T / B) * d / D \\\\
+            F_{1t} & = F_1 + F_t
+
+    Where:
+        :math:`F_1` : Wrap resistance between belt and pulley (N);
+        :math:`F_t` : Pulley bearing resistance (N)
+
     Parameters
     ----------
-    B: float
-        Total width of belt (m)
-    d: float
-        Belt thickness (m)
-    d_0: float
-        Inside bearing diameter (m)
-    D: float
-        Pulley diameter (m)
-    m_p: float
-        Pulley mass (kg)
-    t_1: float
-        Tight-side tension at pulley (N)
-    t_2: float
-        Slack-side tension at pulley (N)
+    B : float
+        :math:`B` : Total width of belt (m)
+    d : float
+        :math:`d` : Belt thickness (m)
+    d_0 : float
+        :math:`d_0` : Inside bearing diameter (m)
+    D : float
+        :math:`D` : Pulley diameter (m)
+    m_p : float
+        :math:`m_p` : Pulley mass (kg)
+    t_1 : float
+        :math:`T_1` : Tight-side tension at pulley (N)
+    t_2 : float
+        :math:`T_2` : Slack-side tension at pulley (N)
 
     Returns
     -------
-    float:
-        Wrap resistance between belt and pulley (N)
-
+    float
+        :math:`F_{1t}`: Approximate combined resistance (N)
 
     """
     g = 9.81
@@ -384,7 +393,8 @@ def tension_transmit_min(f_u, wrap_a, mu_b, acc_sd=3, t_2_min=None):
 
     The following ratio should be satisfied.
 
-        :math:`(t_1 / t_2) \\leq \\exp(\mu_b * \\alpha)`
+        .. math::
+            (t_1 / t_2) \\leq \\exp(\mu_b * \\alpha)
 
     Parameters
     ----------
@@ -397,7 +407,7 @@ def tension_transmit_min(f_u, wrap_a, mu_b, acc_sd=3, t_2_min=None):
     acc : int, optional
         Significant digit accuracy for checking the ratio (default: 3)
     t_2_min : float, optional
-        :math:`t_2,min` : Minimum tensile force that must be maintained to transmit :math:`f_u`
+        :math:`t_2` : Minimum tensile force that must be maintained to transmit :math:`f_u`
 
     Returns
     -------
@@ -407,7 +417,6 @@ def tension_transmit_min(f_u, wrap_a, mu_b, acc_sd=3, t_2_min=None):
         :math:`t_2` : Slack-side tension at pulley (N)
     tuple
         :math:`(x,  y, z), where\\ x = (t_1 / t_2)\\ y = \\exp(\mu_b * \\alpha)\\ z = (t_1 / t_2) \\leq \\exp(\mu_b * \\alpha)`
-
 
     """
     wrap_rad = wrap_a * (math.pi / 180)
