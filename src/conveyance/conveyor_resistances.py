@@ -281,7 +281,7 @@ def resistance_belt_cleaners(bc_w, bc_t, bc_p, bc_n, mu3):
     Parameters
     ----------
     bc_w : float
-        :math:`bc_{w}` : Belt cleaner width (:math:`m)
+        :math:`bc_{w}` : Belt cleaner width (:math:`m`)
     bc_t : float
         :math:`bc_{t}` : Belt cleaner thickness (:math:`m`)
     bc_p : float
