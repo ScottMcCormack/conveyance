@@ -3,31 +3,31 @@ import math
 
 def resistance_main(q_m, q_b, q_ro, q_ru, c_l, install_a, ff):
     """
-    Calculate the conveyor main resistance (Fh)
+    Calculate the conveyor main resistance (:math:`F_h`)
 
     Includes the rotational resistances of the carry and return strands, identified by friction coefficient
 
     Parameters
     ----------
     q_m: float
-        Mass per metre of material carried (kg/m)
+        :math:`q_m` : Mass per metre of material carried (:math:`kg/m`)
     q_b: float
-        Belt mass per meter (kg/m)
+        :math:`q_b` : Belt mass per meter (:math:`kg/m`)
     q_ro: float
-        Mass of carry idler per meter (kg/m)
+        :math:`q_ro` : Mass of carry idler per meter (:math:`kg/m`)
     q_ru: float
-        Mass of return idler per meter (kg/m)
+        :math:`q_ru` : Mass of return idler per meter (:math:`kg/m`)
     c_l: float
-        Center-to-centre length of the conveyor (m)
+        :math:`c_l` : Center-to-centre length of the conveyor (:math:`m`)
     install_a: float
-        Installation angle of the conveyor (deg)
+        :math:`a` : Installation angle of the conveyor (:math:`\\rho`)
     ff: float, default=0.02
-        Artificial friction factor (average operating conditions)
+        :math:`f_f` : Artificial friction factor (average operating conditions)
 
     Returns
     -------
-    float:
-        Main resistances to motion (N)
+    float
+        :math:`F_h` : Main resistances to motion (:math:`N`)
 
     """
     f_h = ff * c_l * 9.81 * (q_ro + q_ru + (2 * q_b + q_m) * math.cos(math.radians(install_a)))
@@ -37,39 +37,39 @@ def resistance_main(q_m, q_b, q_ro, q_ru, c_l, install_a, ff):
 def resistance_secondary(q_v, p, v, v_0, B, b1, mu1, mu2, wrap_a_h, wrap_a_t,
                          f_1t_d=None, f_1t_t=None):
     """
-    Calculate the conveyor secondary resistances (Fn)
+    Calculate the conveyor secondary resistances (:math:`F_n`)
 
     Parameters
     ----------
-    q_v: float
-        Volume per second of material carried (m^3/s)
-    p: float
-        Density of the material (t/m^3)
-    v: float
-        Speed of the conveyor belt (m/s)
-    v_0: float
-        Speed of the material dropped on to the belt, in the direction of the belt movement (m/s)
-    B: float
-        Total width of belt (m)
-    b1: float
-        Width between skirtplates (m)
-    mu1: float
-        Friction coefficient between material/belt
-    mu2: float
-        Friction coefficient between material/skirtplates
-    wrap_a_h: float
-        Wrap angle around the head pulley (deg)
-    wrap_a_t: float
-        Wrap angle around the tail pulley (deg)
-    f_1t_d: float, optional
-        Wrap resistance between the belt and the drive pulley (N)
-    f_1t_t: float, optional
-        Wrap resistance between the belt and the tail pulley (N)
+    q_v : float
+        :math:`q_v` : Volume per second of material carried (:math:`m^3/s`)
+    p : float
+        :math:`\\rho` : Density of the material (:math:`t/m^3`)
+    v : float
+        :math:`v` : Speed of the conveyor belt (:math:`m/s`)
+    v_0 : float
+        :math:`v_0` : Speed of the material dropped on to the belt, in the direction of the belt movement (:math:`m/s`)
+    B:  float
+        :math:`B` : Total width of belt (:math:`m`)
+    b1 : float
+        :math:`b_1` : Width between skirtplates (:math:`m`)
+    mu1 : float
+        :math:`\\mu_1` : Friction coefficient between material/belt
+    mu2 : float
+        :math:`\\mu_2` : Friction coefficient between material/skirtplates
+    wrap_a_h : float
+        :math:`\\theta_h` : Wrap angle around the head pulley (:math:`\\theta`)
+    wrap_a_t : float
+        :math:`\\theta_t` : Wrap angle around the tail pulley (:math:`\\theta`)
+    f_1t_d : float, optional
+        :math:`f_(1t,d)` : Wrap resistance between the belt and the drive pulley (:math:`N`)
+    f_1t_t : float, optional
+        :math:`f_(1t,t)` : Wrap resistance between the belt and the tail pulley (:math:`N`)
 
     Returns
     -------
-    float:
-        Secondary resistances due to inertial and material and belt frictions (N)
+    float
+        :math:`F_n` : Secondary resistances due to inertial and material and belt frictions (:math:`N`)
 
     """
     # Inertial and friction resistances (FbA)
@@ -95,33 +95,33 @@ def resistance_concentrated(q_v, p, v, l_s, b1, bc_w, bc_t, bc_p, bc_n, mu2, mu3
 
     Parameters
     ----------
-    q_v: float
-        Volume per second of material carried (m^3/s)
-    p: float
-        Density of the material (t/m^3)
-    v: float
-        Speed of the conveyor belt (m/s)
-    l_s: float
-        Length of installation fitted with skirtplates (m)
-    b1: float
-        Width between skirtplates (m)
-    bc_w: float
-        Belt cleaner width (m)
-    bc_t: float
-        Belt cleaner thickness (m)
+    q_v : float
+        Volume per second of material carried (:math:`m^3/s`)
+    p : float
+        Density of the material (:math:`t/m^3`)
+    v : float
+        Speed of the conveyor belt (:math:`m/s`)
+    l_s : float
+        Length of installation fitted with skirtplates (:math:`m`)
+    b1 : float
+        Width between skirtplates (:math:`m`)
+    bc_w : float
+        Belt cleaner width (:math:`m`)
+    bc_t : float
+        Belt cleaner thickness (:math:`m`)
     bc_p : float
-        Pressure between cleaner and belt (N/m^2)
+        Pressure between cleaner and belt (:math:`N/m^2`)
     bc_n : int
         Number of belt cleaners
-    mu2: float
-        Friction coefficient between material/skirtplates
-    mu3: float
-        Friction coefficient between belt and cleaner
+    mu2 : float
+        :math:`\\mu_2` : Friction coefficient between material/skirtplates
+    mu3 : float
+        :math:`\\mu_3` : Friction coefficient between belt and cleaner
 
     Returns
     -------
-    float:
-        Conveyor concentrated resistances (N)
+    float
+        Conveyor concentrated resistances (:math:`N`)
 
     """
     # Resistance due to idler tilting (Fep)
@@ -142,19 +142,19 @@ def resistance_concentrated(q_v, p, v, l_s, b1, bc_w, bc_t, bc_p, bc_n, mu2, mu3
 
 def resistance_gravity(q_m, H):
     """
-    Calculate the gravity forces from the conveyed material on the belt (FN)
+    Calculate the gravity forces from the conveyed material on the belt (:math:`F_N`)
 
     Parameters
     ----------
-    q_m: float
-        Mass per metre of material carried (kg/m)
-    H: float
-        The conveyor lift (m)
+    q_m : float
+        :math:`q_m` : Mass per metre of material carried (:math:`kg/m`)
+    H : float
+        :math:`H` : The conveyor lift (:math:`m`)
 
     Returns
     -------
-    float:
-        Resistance due to gravity of the conveyed material (N)
+    float
+        :math:`F_N` : Resistance due to gravity of the conveyed material (:math:`N`)
 
     """
     f_st = q_m * H * 9.81
@@ -163,26 +163,25 @@ def resistance_gravity(q_m, H):
 
 def resistance_inertial_friction(q_v, p, v, v_0):
     """
-    Calculate the inertial and friction resistances (FbA)
+    Calculate the inertial and friction resistances (:math:`F_{bA}`)
 
-    Determined at the loading point and in the acceleration area between the material handled and the belt (FbA)
+    Determined at the loading point and in the acceleration area between the material handled and the belt (:math:`F_{bA}`)
 
     Parameters
     ----------
-    q_v: float
-        Volume per second of material carried (m^3/s)
-    p: float
-        Density of the material (t/m^3)
-    v: float
-        Speed of the conveyor belt (m/s)
-    v_0: float
-        Speed of the material dropped on to the belt, in the direction of the belt movement (m/s)
-
+    q_v : float
+        :math:`q_v` : Volume per second of material carried (:math:`m^3/s`)
+    p : float
+        :math:`\\rho` : Density of the material (:math:`t/m^3`)
+    v : float
+        :math:`v` : Speed of the conveyor belt (:math:`m/s`)
+    v_0 : float
+        :math:`v_0` : Speed of the material dropped on to the belt, in the direction of the belt movement (:math:`m/s`)
 
     Returns
     -------
-    float:
-        Resistance due to inertial and friction forces (N)
+    float
+        Resistance due to inertial and friction forces (:math:`N`)
 
     """
     f_ba = q_v * p * 1000 * (v - v_0)
@@ -191,29 +190,29 @@ def resistance_inertial_friction(q_v, p, v, v_0):
 
 def resistance_material_acceleration(q_v, p, v, v_0, b1, mu1, mu2):
     """
-    Calculate the resistance between handled material and skirtplates in acceleration area (Ff)
+    Calculate the resistance between handled material and skirtplates in acceleration area (:math:`F_f`)
 
     Parameters
     ----------
-    q_v: float
-        Volume per second of material carried (m^3/s)
-    p: float
-        Density of the material (t/m^3)
-    v: float
-        Speed of the conveyor belt (m/s)
-    v_0: float
-        Speed of the material dropped on to the belt, in the direction of the belt movement (m/s)
-    b1: float
-        Width between skirtplates (m)
-    mu1: float
-        Friction coefficient between material/belt
-    mu2: float
-        Friction coefficients between material/skirtplates
+    q_v : float
+        :math:`q_v` : Volume per second of material carried (:math:`m^3/s`)
+    p : float
+        :math:`\\rho` : Density of the material (:math:`t/m^3`)
+    v : float
+        :math:`v` : Speed of the conveyor belt (:math:`m/s`)
+    v_0 : float
+        :math:`v_0` : Speed of the material dropped on to the belt, in the direction of the belt movement (:math:`m/s`)
+    b1 : float
+        :math:`b_1` : Width between skirtplates (:math:`m`)
+    mu1 : float
+        :math:`\\mu_1` : Friction coefficient between material/belt
+    mu2 : float
+        :math:`\\mu_2` : Friction coefficients between material/skirtplates
 
     Returns
     -------
-    float:
-        Resistance between handled material and skirtplates in acceleration area (N)
+    float
+        :math:`F_f` : Resistance between handled material and skirtplates in acceleration area (:math:`N`)
 
     """
     g = 9.81
@@ -224,19 +223,19 @@ def resistance_material_acceleration(q_v, p, v, v_0, b1, mu1, mu2):
 
 def resistance_belt_wrap(B, wrap_a):
     """
-    Calculate the wrap resistance between the belt and pulley (F1t)
+    Calculate the wrap resistance between the belt and pulley (:math:`F_{1t}`)
 
     Parameters
     ----------
-    B: float
-        Total width of belt (m)
-    wrap_a: float
-        Wrap angle around the pulley (deg)
+    B : float
+        :math:`B` : Total width of belt (:math:`m`)
+    wrap_a : float
+        :math:`\\theta` : Wrap angle around the pulley (:math:`\\theta`)
 
     Returns
     -------
-    float:
-        Resistance between the belt and pulley (N)
+    float
+        :math:`F_{1t}` : Resistance between the belt and pulley (:math:`N`)
 
     """
     # If alpha > 90, then sin(alpha) = 1
@@ -248,27 +247,27 @@ def resistance_belt_wrap(B, wrap_a):
 
 def resistance_material_skirtplates(q_v, p, v, l_s, b1, mu2):
     """
-    Calculate the resistance due to friction between the material handled and skirt plates (FgL)
+    Calculate the resistance due to friction between the material handled and skirt plates (:math:`F_{gL}`)
 
     Parameters
     ----------
-    q_v: float
-        Volume per second of material carried (m^3/s)
-    p: float
-        Density of the material (t/m^3)
-    v: float
-        Speed of the conveyor belt (m/s)
-    l_s: float
-        Length of installation fitted with skirtplates (m)
-    b1: float
-        Width between skirtplates (m)
-    mu2: float
-        Friction coefficients between material/skirtplates
+    q_v : float
+        :math:`q_v` : Volume per second of material carried (:math:`m^3/s`)
+    p : float
+        :math:`\\rho` : Density of the material (:math:`t/m^3`)
+    v : float
+        :math:`v` : Speed of the conveyor belt (:math:`m/s`)
+    l_s : float
+        :math:`l_s` : Length of installation fitted with skirtplates (:math:`m`)
+    b1 : float
+        :math:`b_1` : Width between skirtplates (:math:`m`)
+    mu2 : float
+        :math:`\\mu_2` : Friction coefficients between material/skirtplates
 
     Returns
     -------
-    float:
-        Resistance due to friction between the material handled and skirt plates (N)
+    float
+        :math:`F_{gL}`: Resistance due to friction between the material handled and skirt plates (:math:`N`)
 
     """
     f_gl = (mu2 * (q_v ** 2) * (p * 1000) * 9.81 * l_s) / ((v ** 2) * (b1 ** 2))
@@ -277,25 +276,25 @@ def resistance_material_skirtplates(q_v, p, v, l_s, b1, mu2):
 
 def resistance_belt_cleaners(bc_w, bc_t, bc_p, bc_n, mu3):
     """
-    Calculate the friction resistance due to belt cleaners fitted to the conveyor (Frc)
+    Calculate the friction resistance due to belt cleaners fitted to the conveyor (:math:`F_{rc}`)
 
     Parameters
     ----------
-    bc_w: float
-        Belt cleaner width (m)
-    bc_t: float
-        Belt cleaner thickness (m)
+    bc_w : float
+        :math:`bc_{w}` : Belt cleaner width (:math:`m)
+    bc_t : float
+        :math:`bc_{t}` : Belt cleaner thickness (:math:`m`)
     bc_p : float
-        Pressure between cleaner and belt (N/m^2)
+        :math:`bc_{p}` : Pressure between cleaner and belt (:math:`N/m^2`)
     bc_n : int
-        Number of belt cleaners
-    mu3: float
-        Friction coefficient between belt and cleaner
+        :math:`bc_{n}` : Number of belt cleaners
+    mu3 : float
+        :math:`\\mu_2` : Friction coefficient between belt and cleaner
 
     Returns
     -------
-    float:
-        Friction resistance due to belt cleaners fitted to the conveyor (N)
+    float
+        :math:`F_{rc}` : Friction resistance due to belt cleaners fitted to the conveyor (:math:`N`)
 
     """
     f_rc = bc_w * bc_t * bc_p * bc_n * mu3
@@ -308,25 +307,25 @@ def resistance_belt_sag_tension(q_m, q_b, a_o, a_u, h_a_o, h_a_u):
 
     Parameters
     ----------
-    q_m: float
-        Mass per metre of material carried (kg/m)
-    q_b: float
-        Belt mass per meter (kg/m)
-    a_o: float
-        Idler spacing, carry (m)
-    a_u: float
-        Idler spacing, return (m)
-    h_a_o: float
-        Allowable belt sag between idlers, carry (m)
-    h_a_u: float
-        Allowable belt sag between idlers, return (m)
+    q_m : float
+        :math:`q_m` : Mass per metre of material carried (:math`kg/m`)
+    q_b : float
+        :math:`q_b` : Belt mass per meter (:math`kg/m`)
+    a_o : float
+        :math:`a_o` : Idler spacing, carry (:math`m`)
+    a_u : float
+        :math:`a_u` : Idler spacing, return (:math`m`)
+    h_a_o : float
+        :math:`h_{ao}` : Allowable belt sag between idlers, carry (:math`m`)
+    h_a_u : float
+        :math:`h_{au}` : Allowable belt sag between idlers, return (:math`m`)
 
     Returns
     -------
-    float:
-        Carry side, minimum tensile force to limit belt sag between 2 sets of idlers (N)
-    float:
-        Return side, minimum tensile force to limit belt sag between 2 sets of idlers (N)
+    float
+        Carry side, minimum tensile force to limit belt sag between 2 sets of idlers (:math:`N`)
+    float
+        Return side, minimum tensile force to limit belt sag between 2 sets of idlers (:math:`N`)
 
     """
     # Carry side
@@ -349,30 +348,30 @@ def resistance_belt_wrap_iso(B, d, D, d_0, m_p, t_1, t_2):
             F_{1t} & = F_1 + F_t
 
     Where:
-        :math:`F_1` : Wrap resistance between belt and pulley (N);
-        :math:`F_t` : Pulley bearing resistance (N)
+        :math:`F_1` : Wrap resistance between belt and pulley (:math:`N`);
+        :math:`F_t` : Pulley bearing resistance (:math:`N`)
 
     Parameters
     ----------
     B : float
-        :math:`B` : Total width of belt (m)
+        :math:`B` : Total width of belt (:math:`m`)
     d : float
-        :math:`d` : Belt thickness (m)
+        :math:`d` : Belt thickness (:math:`m`)
     d_0 : float
-        :math:`d_0` : Inside bearing diameter (m)
+        :math:`d_0` : Inside bearing diameter (:math:`m`)
     D : float
-        :math:`D` : Pulley diameter (m)
+        :math:`D` : Pulley diameter (:math:m`)
     m_p : float
-        :math:`m_p` : Pulley mass (kg)
+        :math:`m_p` : Pulley mass (:math:`kg`)
     t_1 : float
-        :math:`T_1` : Tight-side tension at pulley (N)
+        :math:`T_1` : Tight-side tension at pulley (:math:`N`)
     t_2 : float
-        :math:`T_2` : Slack-side tension at pulley (N)
+        :math:`T_2` : Slack-side tension at pulley (:math:`N`)
 
     Returns
     -------
     float
-        :math:`F_{1t}`: Approximate combined resistance (N)
+        :math:`F_{1t}`: Approximate combined resistance (:math:`N`)
 
     """
     g = 9.81
@@ -399,9 +398,9 @@ def tension_transmit_min(f_u, wrap_a, mu_b, acc_sd=3, t_2_min=None):
     Parameters
     ----------
     f_u :  float
-        :math:`f_u` : Peripheral driving force on driving pulley (N)
+        :math:`f_u` : Peripheral driving force on driving pulley (:math:`N`)
     wrap_a : float
-        :math:`\\alpha` : Wrap angle around the pulley (deg)
+        :math:`\\alpha` : Wrap angle around the pulley (:math:`\\theta`)
     mu_b : float
         :math:`\\mu_b` : Belt/Pulley friction coefficient
     acc : int, optional
@@ -412,9 +411,9 @@ def tension_transmit_min(f_u, wrap_a, mu_b, acc_sd=3, t_2_min=None):
     Returns
     -------
     float
-        :math:`t_1` : Tight-side tension at pulley (N)
+        :math:`t_1` : Tight-side tension at pulley (:math:`N`)
     float
-        :math:`t_2` : Slack-side tension at pulley (N)
+        :math:`t_2` : Slack-side tension at pulley (:math:`N`)
     tuple
         :math:`(x,  y, z), where\\ x = (t_1 / t_2)\\ y = \\exp(\mu_b * \\alpha)\\ z = (t_1 / t_2) \\leq \\exp(\mu_b * \\alpha)`
 

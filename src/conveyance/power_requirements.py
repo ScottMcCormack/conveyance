@@ -8,9 +8,9 @@ def power_requirements_motor(f_u, v, d_eta_1, d_eta_2):
     Parameters
     ----------
     f_u : float
-       :math:`f_u` : Peripheral driving force on driving pulley (N)
+       :math:`f_u` : Peripheral driving force on driving pulley (:math:`N`)
     v : float
-        :math:`v` : Speed of the conveyor belt (m/s)
+        :math:`v` : Speed of the conveyor belt (:math:`m/s`)
     d_eta_1 : float
         :math:`\\eta_1` : Fluid coupling efficiency
     d_eta_2 : float
@@ -19,7 +19,7 @@ def power_requirements_motor(f_u, v, d_eta_1, d_eta_2):
     Returns
     -------
     float
-        :math:`P_A` : Power requirements for the drive motor (W)
+        :math:`P_A` : Power requirements for the drive motor (:math:`W`)
 
     """
     # p_a: Drive pulley power requirements (operating requirements)
