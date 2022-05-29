@@ -6,7 +6,15 @@ def mass_density_material(v, q=None, q_v=None, p=None):
     Calculate the mass of material on the conveyor (:math:`kg/m`)
 
     In addition to providing `v`, it accepts either a throughput
-    :math:`q` or :math:`q_v` flow rate and :math:`p` material density
+    :math:`q`
+
+        .. math::
+            q_m = (q * 10^3) / (3600 * v)
+
+    Or :math:`q_v` flow rate and :math:`\\rho` material density
+
+        .. math::
+            q_m = (q_v * \\rho *  10^3) / v
 
     Parameters
     ----------
@@ -22,7 +30,7 @@ def mass_density_material(v, q=None, q_v=None, p=None):
     Returns
     -------
     float
-        Mass per metre of material carried (:math:`kg/m`)
+        :math:`q_m` : Mass per metre of material carried (:math:`kg/m`)
 
     """
     if q:
@@ -39,6 +47,9 @@ def mass_density_idler(a, m):
     """
     Calculate the mass of the idler per meter (:math:`kg/m`)
 
+        .. math::
+            q_r = m / a
+
     Parameters
     ----------
     a : float
@@ -49,7 +60,7 @@ def mass_density_idler(a, m):
     Returns
     -------
     float
-        Mass per meter from idlers (:math:`kg/m`)
+        :math:`q_r` : Mass per meter from idlers (:math:`kg/m`)
 
     """
     q = m / a
@@ -59,6 +70,9 @@ def mass_density_idler(a, m):
 def volume_carried_material(q, p):
     """
     Calculate the volume carried per second (:math:`m^3/s`)
+
+        .. math::
+            q_v = \\dfrac{q}{3600 * \\rho}
 
     Parameters
     ----------
@@ -79,19 +93,22 @@ def volume_carried_material(q, p):
 
 def volumetric_flow(belt_ca, v):
     """
-    Calculate the theoretical flow rate of the conveyor
+    Calculate the theoretical flow rate of the conveyor (:math:`m^3/s`)
+
+        .. math::
+            Q_v = S * v
 
     Parameters
     ----------
     belt_ca : float
-        Cross-sectional area of material of the belt (:math:`m^2`)
+        :math:`S` : Cross-sectional area of material of the belt (:math:`m^2`)
     v : float
-        Speed of the conveyor belt (:math:`m/s`)
+        :math:`v` : Speed of the conveyor belt (:math:`m/s`)
 
     Returns
     -------
     float
-        The theoretical flow rate of the conveyor (:math:`m^3/s`)
+        :math:`Q_v` : The theoretical flow rate of the conveyor (:math:`m^3/s`)
 
     """
     return belt_ca * v
@@ -99,9 +116,15 @@ def volumetric_flow(belt_ca, v):
 
 def belt_cs_area(l3, b, ia, sa):
     """
-    Calculate the cross-sectional area of material of the belt.
+    Calculate the cross-sectional area of material on the belt (:math:`m^2`)
 
-    A three-roll idler set is assumed.
+    **Note**: A three-roll idler set is assumed.
+
+        .. math::
+            S_1  & = \\frac{1}{6} (l_3 + (b - l_3) \\cos \\lambda)^2 \\tan \\theta \\\\
+            S_2  & = \\left (l_3 + \\dfrac {b - l_3}{2} \\cos \\lambda \\right)
+                     \\left (\\dfrac {b - l_3}{2} \\sin \\lambda \\right) \\\\
+            S    & = S_1 + S_2
 
     Parameters
     ----------
@@ -110,14 +133,14 @@ def belt_cs_area(l3, b, ia, sa):
     b : float
         :math:`b` : Width of max material on belt (:math:`m`)
     ia : float
-        :math:`i_a` : Installed angle of the side idlers (:math:`\\theta`)
+        :math:`\\lambda` : Installed angle of the side idlers (:math:`deg`)
     sa : float
-        :math:`s_a` : Surcharge angle of the material (:math:`\\theta`)
+        :math:`\\theta` : Surcharge angle of the material (:math:`deg`)
 
     Returns
     -------
     float
-        The cross-sectional area of material on the belt (:math:`m^2`)
+        :math:`S` : The cross-sectional area of material on the belt (:math:`m^2`)
 
     """
     # Convert deg inputs to radians
