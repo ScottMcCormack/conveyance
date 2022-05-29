@@ -9,12 +9,12 @@ def mass_density_material(v, q=None, q_v=None, p=None):
     :math:`q`
 
         .. math::
-            q_m = (q * 10^3) / (3600 * v)
+            q_m = \\dfrac{q}{3600\\ v}
 
     Or :math:`q_v` flow rate and :math:`\\rho` material density
 
         .. math::
-            q_m = (q_v * \\rho *  10^3) / v
+            q_m = \\dfrac{Q_v\\ \\rho}{v}
 
     Parameters
     ----------
@@ -23,7 +23,7 @@ def mass_density_material(v, q=None, q_v=None, p=None):
     q : float
         :math:`q` : Throughput of the conveyor (:math:`t/h`)
     q_v : float
-        :math:`q_v` : Flow rate of the conveyor (:math:`m^3/s`)
+        :math:`Q_v` : Flow rate of the conveyor (:math:`m^3/s`)
     p : float
         :math:`\\rho` : Density of the material (:math:`t/m^3`)
 
@@ -48,7 +48,7 @@ def mass_density_idler(a, m):
     Calculate the mass of the idler per meter (:math:`kg/m`)
 
         .. math::
-            q_r = m / a
+            q_r = \\dfrac{m}{a}
 
     Parameters
     ----------
@@ -72,7 +72,7 @@ def volume_carried_material(q, p):
     Calculate the volume carried per second (:math:`m^3/s`)
 
         .. math::
-            q_v = \\dfrac{q}{3600 * \\rho}
+            Q_v = \\dfrac{q}{3600\\ \\rho}
 
     Parameters
     ----------
@@ -96,7 +96,7 @@ def volumetric_flow(belt_ca, v):
     Calculate the theoretical flow rate of the conveyor (:math:`m^3/s`)
 
         .. math::
-            Q_v = S * v
+            Q_v = S\\ v
 
     Parameters
     ----------
