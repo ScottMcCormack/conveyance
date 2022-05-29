@@ -178,7 +178,7 @@ def resistance_inertial_friction(q_v, p, v, v_0):
     Calculate the inertial and friction resistances (:math:`F_{bA}`)
 
         .. math::
-            F_{bA} = Q_v\\ \\rho\\ (v - v_0)
+            F_{bA} = Q_v\\ (1000\\ \\rho) (v - v_0)
 
     Determined at the loading point and in the acceleration area between the material handled and the belt.
 
@@ -209,7 +209,7 @@ def resistance_material_acceleration(q_v, p, v, v_0, b1, mu1, mu2):
 
         .. math::
             l_{b\\ min}  & = \\dfrac{v^2 - v_0^2}{2\\ g\\ \\mu_1} \\\\
-            F_f          & = \\dfrac{\\mu_2\\ Q_v^2\\ \\rho\\ g\\ l_b}
+            F_f          & = \\dfrac{\\mu_2\\ Q_v^2\\ (1000\\ \\rho) g\\ l_b}
                                     {[(v + v_0)/2]^2\\ b_{1}^2}
 
     Parameters
@@ -273,7 +273,7 @@ def resistance_material_skirtplates(q_v, p, v, l_s, b1, mu2):
     Calculate the resistance due to friction between the material handled and skirt plates (:math:`F_{gL}`)
 
         .. math::
-            F_{gL} = \\dfrac{\\mu_2\\ Q_v^2\\ \\rho\\ g\\ l_s}
+            F_{gL} = \\dfrac{\\mu_2\\ Q_v^2\\ (1000\\ \\rho) g\\ l_s}
                             {v^2\\ b_{1}^2}
 
     Parameters
@@ -423,17 +423,17 @@ def resistance_belt_wrap_iso(B, d, D, d_0, m_p, t_1, t_2):
 
 def tension_transmit_min(f_u, wrap_a, mu_b, acc_sd=3, t_2_min=None):
     """
-    Ensure that a minimum tensile force is sufficient to transmit :math:`f_u`
+    Ensure that a minimum tensile force is sufficient to transmit :math:`F_u`
 
     The following ratio should be satisfied.
 
         .. math::
-            (t_1 / t_2) \\leq \\exp(\\mu_b * \\alpha)
+            (t_1 / t_2) \\leq \\exp(\\mu_b\\ \\alpha)
 
     Parameters
     ----------
     f_u :  float
-        :math:`f_u` : Peripheral driving force on driving pulley (:math:`N`)
+        :math:`F_u` : Peripheral driving force on driving pulley (:math:`N`)
     wrap_a : float
         :math:`\\alpha` : Wrap angle around the pulley (:math:`\\theta`)
     mu_b : float
@@ -441,7 +441,7 @@ def tension_transmit_min(f_u, wrap_a, mu_b, acc_sd=3, t_2_min=None):
     acc : int, optional
         Significant digit accuracy for checking the ratio (default: 3)
     t_2_min : float, optional
-        :math:`t_{2 min}` : Minimum tensile force that must be maintained to transmit :math:`f_u`
+        :math:`t_{2\\ min}` : Minimum tensile force that must be maintained to transmit :math:`f_u`
 
     Returns
     -------
@@ -450,7 +450,7 @@ def tension_transmit_min(f_u, wrap_a, mu_b, acc_sd=3, t_2_min=None):
     float
         :math:`t_2` : Slack-side tension at pulley (:math:`N`)
     tuple
-        :math:`(x,  y, z), where\\ x = (t_1 / t_2)\\ y = \\exp(\\mu_b * \\alpha)\\ z = (t_1 / t_2) \\leq \\exp(\\mu_b * \\alpha)`
+        :math:`(x, y, z), where\\ x = (t_1 / t_2)\\ y = \\exp(\\mu_b\\ \\alpha)\\ z = (t_1 / t_2) \\leq \\exp(\\mu_b\\ \\alpha)`
 
     """
     wrap_rad = wrap_a * (math.pi / 180)

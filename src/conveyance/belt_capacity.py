@@ -9,12 +9,12 @@ def mass_density_material(v, q=None, q_v=None, p=None):
     :math:`q`
 
         .. math::
-            q_m = \\dfrac{q}{3600\\ v}
+            q_m = \\dfrac{1000\\ q}{3600\\ v}
 
-    Or :math:`q_v` flow rate and :math:`\\rho` material density
+    Or :math:`Q_v` flow rate and :math:`\\rho` material density
 
         .. math::
-            q_m = \\dfrac{Q_v\\ \\rho}{v}
+            q_m = \\dfrac{Q_v\\ (1000\\ \\rho)}{v}
 
     Parameters
     ----------
@@ -84,7 +84,7 @@ def volume_carried_material(q, p):
     Returns
     -------
     float
-        Volume per second of material carried (:math:`m^3/s`)
+        :math:`Q_v` : Volume per second of material carried (:math:`m^3/s`)
 
     """
     q_v = (1000 * q) / (3600 * p * 1000)
