@@ -3,9 +3,12 @@ import math
 
 def resistance_main(q_m, q_b, q_ro, q_ru, c_l, install_a, ff):
     """
-    Calculate the conveyor main resistance (:math:`F_h`)
+    Calculate the conveyor main resistance (:math:`F_H`)
 
-    Includes the rotational resistances of the carry and return strands, identified by friction coefficient
+    Includes the rotational resistances of the carry and return strands, identified by the friction coefficient
+
+        .. math::
+            F_H = f * L * g * (q_{ro} + q_{ru} + (2 * q_b + q_m) \\cos \\delta)
 
     Parameters
     ----------
@@ -14,20 +17,20 @@ def resistance_main(q_m, q_b, q_ro, q_ru, c_l, install_a, ff):
     q_b: float
         :math:`q_b` : Belt mass per meter (:math:`kg/m`)
     q_ro: float
-        :math:`q_ro` : Mass of carry idler per meter (:math:`kg/m`)
+        :math:`q_{ro}` : Mass of carry idler per meter (:math:`kg/m`)
     q_ru: float
-        :math:`q_ru` : Mass of return idler per meter (:math:`kg/m`)
+        :math:`q_{ru}` : Mass of return idler per meter (:math:`kg/m`)
     c_l: float
-        :math:`c_l` : Center-to-centre length of the conveyor (:math:`m`)
+        :math:`L` : Center-to-centre length of the conveyor (:math:`m`)
     install_a: float
-        :math:`a` : Installation angle of the conveyor (:math:`\\rho`)
+        :math:`\\delta` : Installation angle of the conveyor (:math:`deg`)
     ff: float, default=0.02
-        :math:`f_f` : Artificial friction factor (average operating conditions)
+        :math:`f` : Artificial friction factor (average operating conditions)
 
     Returns
     -------
     float
-        :math:`F_h` : Main resistances to motion (:math:`N`)
+        :math:`F_H` : Main resistances to motion (:math:`N`)
 
     """
     f_h = ff * c_l * 9.81 * (q_ro + q_ru + (2 * q_b + q_m) * math.cos(math.radians(install_a)))
@@ -37,7 +40,10 @@ def resistance_main(q_m, q_b, q_ro, q_ru, c_l, install_a, ff):
 def resistance_secondary(q_v, p, v, v_0, B, b1, mu1, mu2, wrap_a_h, wrap_a_t,
                          f_1t_d=None, f_1t_t=None):
     """
-    Calculate the conveyor secondary resistances (:math:`F_n`)
+    Calculate the conveyor secondary resistances (:math:`F_N`)
+
+        .. math::
+            F_N = F_{bA} + F_f + F_1 + F_t
 
     Parameters
     ----------
@@ -58,18 +64,18 @@ def resistance_secondary(q_v, p, v, v_0, B, b1, mu1, mu2, wrap_a_h, wrap_a_t,
     mu2 : float
         :math:`\\mu_2` : Friction coefficient between material/skirtplates
     wrap_a_h : float
-        :math:`\\theta_h` : Wrap angle around the head pulley (:math:`\\theta`)
+        :math:`\\theta_h` : Wrap angle around the head pulley (:math:`deg`)
     wrap_a_t : float
-        :math:`\\theta_t` : Wrap angle around the tail pulley (:math:`\\theta`)
+        :math:`\\theta_t` : Wrap angle around the tail pulley (:math:`deg`)
     f_1t_d : float, optional
-        :math:`f_(1t,d)` : Wrap resistance between the belt and the drive pulley (:math:`N`)
+        :math:`f_{1t,d}` : Wrap resistance between the belt and the drive pulley (:math:`N`)
     f_1t_t : float, optional
-        :math:`f_(1t,t)` : Wrap resistance between the belt and the tail pulley (:math:`N`)
+        :math:`f_{1t,t}` : Wrap resistance between the belt and the tail pulley (:math:`N`)
 
     Returns
     -------
     float
-        :math:`F_n` : Secondary resistances due to inertial and material and belt frictions (:math:`N`)
+        :math:`F_N` : Secondary resistances due to inertial and material and belt frictions (:math:`N`)
 
     """
     # Inertial and friction resistances (FbA)
@@ -91,28 +97,31 @@ def resistance_secondary(q_v, p, v, v_0, B, b1, mu1, mu2, wrap_a_h, wrap_a_t,
 
 def resistance_concentrated(q_v, p, v, l_s, b1, bc_w, bc_t, bc_p, bc_n, mu2, mu3):
     """
-    Calculate concentrated local resistances on the conveyor
+    Calculate concentrated local resistances on the conveyor (:math:`N`)
+
+        .. math::
+            F_S = F_{\\epsilon} + F_{gL} + F_{rc} + F_a
 
     Parameters
     ----------
     q_v : float
-        Volume per second of material carried (:math:`m^3/s`)
+        :math:`q_v` : Volume per second of material carried (:math:`m^3/s`)
     p : float
-        Density of the material (:math:`t/m^3`)
+        :math:`\\rho` : Density of the material (:math:`t/m^3`)
     v : float
-        Speed of the conveyor belt (:math:`m/s`)
+        :math:`v` : Speed of the conveyor belt (:math:`m/s`)
     l_s : float
-        Length of installation fitted with skirtplates (:math:`m`)
+        :math:`l_s` : Length of installation fitted with skirtplates (:math:`m`)
     b1 : float
-        Width between skirtplates (:math:`m`)
+        :math:`b_1` : Width between skirtplates (:math:`m`)
     bc_w : float
-        Belt cleaner width (:math:`m`)
+        :math:`bc_w` : Belt cleaner width (:math:`m`)
     bc_t : float
-        Belt cleaner thickness (:math:`m`)
+        :math:`bc_t` : Belt cleaner thickness (:math:`m`)
     bc_p : float
-        Pressure between cleaner and belt (:math:`N/m^2`)
+        :math:`bc_p` : Pressure between cleaner and belt (:math:`N/m^2`)
     bc_n : int
-        Number of belt cleaners
+        :math:`bc_n` : Number of belt cleaners
     mu2 : float
         :math:`\\mu_2` : Friction coefficient between material/skirtplates
     mu3 : float
@@ -121,7 +130,7 @@ def resistance_concentrated(q_v, p, v, l_s, b1, bc_w, bc_t, bc_p, bc_n, mu2, mu3
     Returns
     -------
     float
-        Conveyor concentrated resistances (:math:`N`)
+        :math:`F_S` : Conveyor concentrated resistances (:math:`N`)
 
     """
     # Resistance due to idler tilting (Fep)
@@ -165,7 +174,7 @@ def resistance_inertial_friction(q_v, p, v, v_0):
     """
     Calculate the inertial and friction resistances (:math:`F_{bA}`)
 
-    Determined at the loading point and in the acceleration area between the material handled and the belt (:math:`F_{bA}`)
+    Determined at the loading point and in the acceleration area between the material handled and the belt.
 
     Parameters
     ----------
@@ -181,7 +190,7 @@ def resistance_inertial_friction(q_v, p, v, v_0):
     Returns
     -------
     float
-        Resistance due to inertial and friction forces (:math:`N`)
+        (:math:`F_{bA}`) : Resistance due to inertial and friction forces (:math:`N`)
 
     """
     f_ba = q_v * p * 1000 * (v - v_0)
