@@ -393,7 +393,7 @@ def tension_transmit_min(f_u, wrap_a, mu_b, acc_sd=3, t_2_min=None):
     The following ratio should be satisfied.
 
         .. math::
-            (t_1 / t_2) \\leq \\exp(\mu_b * \\alpha)
+            (t_1 / t_2) \\leq \\exp(\\mu_b * \\alpha)
 
     Parameters
     ----------
@@ -415,7 +415,7 @@ def tension_transmit_min(f_u, wrap_a, mu_b, acc_sd=3, t_2_min=None):
     float
         :math:`t_2` : Slack-side tension at pulley (:math:`N`)
     tuple
-        :math:`(x,  y, z), where\\ x = (t_1 / t_2)\\ y = \\exp(\mu_b * \\alpha)\\ z = (t_1 / t_2) \\leq \\exp(\mu_b * \\alpha)`
+        :math:`(x,  y, z), where\\ x = (t_1 / t_2)\\ y = \\exp(\\mu_b * \\alpha)\\ z = (t_1 / t_2) \\leq \\exp(\\mu_b * \\alpha)`
 
     """
     wrap_rad = wrap_a * (math.pi / 180)
