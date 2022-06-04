@@ -1,5 +1,7 @@
 import yaml
 
+from conveyance import belt_capacity
+
 
 class Conveyance:
     """Class used for conveyor design.
@@ -14,7 +16,11 @@ class Conveyance:
     """
 
     def __init__(self, file_path):
+        # Load design parameters
         self._file_loader(file_path=file_path)
+
+        # Calculate cross-section
+        self._calculate_cross_sectional_capacity()
 
     def _file_loader(self, file_path):
         """Load the design parameters from a YAML file.
@@ -98,3 +104,11 @@ class Conveyance:
         self.d_0_t = tail_pulley['d_0']  # Diameter of inside bearing
         self.D_t = tail_pulley['D']  # Tail pulley diameter
         self.m_p_t = tail_pulley['m_p']  # Tail pulley mass
+
+    def _calculate_cross_sectional_capacity(self):
+        """Calculate the cross-sectional properties of the conveyor
+
+        """
+        self.s = belt_capacity.belt_cs_area(l3=self.l3, b=self.b, ia=self.ia, sa=self.sa)
+        self.q_vt = belt_capacity.volumetric_flow(belt_ca=self.s, v=self.v)
+        self.q_mt = belt_capacity.mass_density_material(v=self.v, q_v=self.q_vt, p=self.p)

@@ -11,14 +11,9 @@ class TestFlatConveyor(unittest.TestCase):
 
     def test_cross_sectional_capacity(self):
         """Test the cross-sectional properties of the conveyor"""
-        s = belt_capacity.belt_cs_area(l3=self.c.l3, b=self.c.b, ia=self.c.ia, sa=self.c.sa)
-        self.assertAlmostEqual(s, 0.180, 3)  # s: 0.180 m^2
-
-        q_vt = belt_capacity.volumetric_flow(belt_ca=s, v=self.c.v)
-        self.assertAlmostEqual(q_vt, 0.865, 3)  # q_vt:	0.865 m^3/s
-
-        q_mt = belt_capacity.mass_density_material(v=self.c.v, q_v=q_vt, p=self.c.p)
-        self.assertAlmostEqual(q_mt, 153, 0)  # q_mt: 153 kg/m
+        self.assertAlmostEqual(self.c.s, 0.180, 3)  # s: 0.180 m^2
+        self.assertAlmostEqual(self.c.q_vt, 0.865, 3)  # q_vt:	0.865 m^3/s
+        self.assertAlmostEqual(self.c.q_mt, 153, 0)  # q_mt: 153 kg/m
 
     def test_flat_conveyor_design(self):
         """Test the design of a flat conveyor"""
