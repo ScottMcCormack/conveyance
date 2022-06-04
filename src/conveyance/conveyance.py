@@ -239,7 +239,7 @@ class Conveyance:
 
         # Resistance between handled material and skirtplates in acceleration area (Ff)
         self.f_f = conveyor_resistances.resistance_material_acceleration(q_v=q_v, p=p, v=v, v_0=v_0,
-                                                                    b1=b1, mu1=mu1, mu2=mu2)
+                                                                         b1=b1, mu1=mu1, mu2=mu2)
 
         # Wrap resistance between the belt and the pulleys (F1t)
         if not f_1t_d:
