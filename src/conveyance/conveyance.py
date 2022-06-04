@@ -203,7 +203,3 @@ class Conveyance:
 
         # Calculate the drive motor power requirements
         self.p_m = power_requirements.power_requirements_motor(f_u=self.f_u, v=self.v, d_eta_1=self.d_eta_1, d_eta_2=self.d_eta_2)
-
-
-
-
