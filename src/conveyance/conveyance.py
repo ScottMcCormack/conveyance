@@ -169,11 +169,6 @@ class Conveyance:
 
         # Fba: Resistance due to inertial and frictional forces
         self.q_v = belt_capacity.volume_carried_material(q=self.q, p=self.p)
-        self.f_ba = conveyor_resistances.resistance_inertial_friction(q_v=self.q_v, p=self.p, v=self.v, v_0=self.v_0)
-
-        # Ff: Resistance between handled material and skirtplates in acceleration area
-        self.f_f = conveyor_resistances.resistance_material_acceleration(q_v=self.q_v, p=self.p, v=self.v, v_0=self.v_0,
-                                                                         b1=self.b1, mu1=self.mu1, mu2=self.mu2)
 
         # f_1t: Wrap resistance between the belt and the pulleys
         self.f_1t = conveyor_resistances.resistance_belt_wrap(B=self.B, wrap_a=self.wrap_a)
@@ -183,17 +178,9 @@ class Conveyance:
                                              B=self.B, b1=self.b1, mu1=self.mu1, mu2=self.mu2,
                                              wrap_a_h=self.wrap_a, wrap_a_t=self.wrap_a)
 
-        # f_gl: Resistance due to friction between the material handled and skirt plates
-        self.f_gl = conveyor_resistances.resistance_material_skirtplates(q_v=self.q_v, p=self.p, v=self.v, l_s=self.l_s, b1=self.b1,
-                                                                         mu2=self.mu2)
-
         # Determine belt sag tension force
         self.f_bs_min_o, self.f_bs_min_u = conveyor_resistances.resistance_belt_sag_tension(q_m=self.q_m, q_b=self.q_b, a_o=self.a_o, a_u=self.a_u,
                                                                                             h_a_o=self.h_a_o, h_a_u=self.h_a_u)
-
-        # f_rc: Friction resistance due to belt cleaners fitted to the conveyor
-        self.f_rc = conveyor_resistances.resistance_belt_cleaners(bc_w=self.bc_w, bc_t=self.bc_t, bc_p=self.bc_p,
-                                                                  bc_n=self.bc_n, mu3=self.mu3)
 
         # f_s: Special resistances
         self.f_s = self.resistance_concentrated(q_v=self.q_v, p=self.p, v=self.v, l_s=self.l_s, b1=self.b1,
@@ -248,10 +235,10 @@ class Conveyance:
 
         """
         # Inertial and friction resistances (FbA)
-        f_ba = conveyor_resistances.resistance_inertial_friction(q_v=q_v, p=p, v=v, v_0=v_0)
+        self.f_ba = conveyor_resistances.resistance_inertial_friction(q_v=q_v, p=p, v=v, v_0=v_0)
 
         # Resistance between handled material and skirtplates in acceleration area (Ff)
-        f_f = conveyor_resistances.resistance_material_acceleration(q_v=q_v, p=p, v=v, v_0=v_0,
+        self.f_f = conveyor_resistances.resistance_material_acceleration(q_v=q_v, p=p, v=v, v_0=v_0,
                                                                     b1=b1, mu1=mu1, mu2=mu2)
 
         # Wrap resistance between the belt and the pulleys (F1t)
@@ -260,7 +247,7 @@ class Conveyance:
         if not f_1t_t:
             f_1t_t = conveyor_resistances.resistance_belt_wrap(B=B, wrap_a=wrap_a_t)  # Tail pulley
 
-        f_n = f_ba + f_f + f_1t_d + f_1t_t
+        f_n = self.f_ba + self.f_f + f_1t_d + f_1t_t
         return f_n
 
     def resistance_concentrated(self, q_v, p, v, l_s, b1, bc_w, bc_t, bc_p, bc_n, mu2, mu3):
