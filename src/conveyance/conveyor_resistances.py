@@ -37,64 +37,6 @@ def resistance_main(q_m, q_b, q_ro, q_ru, c_l, install_a, ff):
     return f_h
 
 
-def resistance_secondary(q_v, p, v, v_0, B, b1, mu1, mu2, wrap_a_h, wrap_a_t,
-                         f_1t_d=None, f_1t_t=None):
-    """
-    Calculate the conveyor secondary resistances (:math:`F_N`)
-
-        .. math::
-            F_N = F_{bA} + F_f + F_1 + F_t
-
-    Parameters
-    ----------
-    q_v : float
-        :math:`q_v` : Volume per second of material carried (:math:`m^3/s`)
-    p : float
-        :math:`\\rho` : Density of the material (:math:`t/m^3`)
-    v : float
-        :math:`v` : Speed of the conveyor belt (:math:`m/s`)
-    v_0 : float
-        :math:`v_0` : Speed of the material dropped on to the belt, in the direction of the belt movement (:math:`m/s`)
-    B:  float
-        :math:`B` : Total width of belt (:math:`m`)
-    b1 : float
-        :math:`b_1` : Width between skirtplates (:math:`m`)
-    mu1 : float
-        :math:`\\mu_1` : Friction coefficient between material/belt
-    mu2 : float
-        :math:`\\mu_2` : Friction coefficient between material/skirtplates
-    wrap_a_h : float
-        :math:`\\theta_h` : Wrap angle around the head pulley (:math:`deg`)
-    wrap_a_t : float
-        :math:`\\theta_t` : Wrap angle around the tail pulley (:math:`deg`)
-    f_1t_d : float, optional
-        :math:`f_{1t,d}` : Wrap resistance between the belt and the drive pulley (:math:`N`)
-    f_1t_t : float, optional
-        :math:`f_{1t,t}` : Wrap resistance between the belt and the tail pulley (:math:`N`)
-
-    Returns
-    -------
-    float
-        :math:`F_N` : Secondary resistances due to inertial and material and belt frictions (:math:`N`)
-
-    """
-    # Inertial and friction resistances (FbA)
-    f_ba = resistance_inertial_friction(q_v=q_v, p=p, v=v, v_0=v_0)
-
-    # Resistance between handled material and skirtplates in acceleration area (Ff)
-    f_f = resistance_material_acceleration(q_v=q_v, p=p, v=v, v_0=v_0,
-                                           b1=b1, mu1=mu1, mu2=mu2)
-
-    # Wrap resistance between the belt and the pulleys (F1t)
-    if not f_1t_d:
-        f_1t_d = resistance_belt_wrap(B=B, wrap_a=wrap_a_h)  # Drive pulley
-    if not f_1t_t:
-        f_1t_t = resistance_belt_wrap(B=B, wrap_a=wrap_a_t)  # Tail pulley
-
-    f_n = f_ba + f_f + f_1t_d + f_1t_t
-    return f_n
-
-
 def resistance_concentrated(q_v, p, v, l_s, b1, bc_w, bc_t, bc_p, bc_n, mu2, mu3):
     """
     Calculate concentrated local resistances on the conveyor (:math:`F_S`)
