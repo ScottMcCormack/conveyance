@@ -6,9 +6,9 @@ from conveyance import Conveyance
 
 class TestFlatConveyor(unittest.TestCase):
     def setUp(self):
-        self.file_path = os.path.join(os.path.dirname(__file__), 'flat_conveyor.yaml')
+        file_path = os.path.join(os.path.dirname(__file__), 'flat_conveyor.yaml')
         q = 2300  # (t/h)
-        self.c = Conveyance(file_path=self.file_path, q=q)
+        self.c = Conveyance(file_path=file_path, q=q)
 
     def test_cross_sectional_capacity(self):
         """Test the cross-sectional properties of the conveyor"""
