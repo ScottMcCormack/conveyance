@@ -1,6 +1,6 @@
 import yaml
 
-from conveyance import belt_capacity
+from conveyance import belt_capacity, conveyor_resistances
 
 
 class Conveyance:
@@ -12,15 +12,22 @@ class Conveyance:
     ----------
     file_path : str
         Path to file containing the design parameters for the conveyor.
+    q : float
+        Target capacity
 
     """
 
-    def __init__(self, file_path):
+    def __init__(self, file_path, q):
+        self.q = q
+
         # Load design parameters
         self._file_loader(file_path=file_path)
 
         # Calculate cross-section
         self._calculate_cross_sectional_capacity()
+
+        # Calculate conveyor design
+        self._calculate_conveyor_design()
 
     def _file_loader(self, file_path):
         """Load the design parameters from a YAML file.
@@ -112,3 +119,26 @@ class Conveyance:
         self.s = belt_capacity.belt_cs_area(l3=self.l3, b=self.b, ia=self.ia, sa=self.sa)
         self.q_vt = belt_capacity.volumetric_flow(belt_ca=self.s, v=self.v)
         self.q_mt = belt_capacity.mass_density_material(v=self.v, q_v=self.q_vt, p=self.p)
+
+    def _calculate_conveyor_design(self):
+        """Calculate the design of the conveyor
+
+        """
+        self.q_m = belt_capacity.mass_density_material(v=self.v, q=self.q)
+        self.q_ro = belt_capacity.mass_density_idler(a=self.a_o, m=self.m_o)
+        self.q_ru = belt_capacity.mass_density_idler(a=self.a_u, m=self.m_u)
+
+        # Fh: Conveyor main resistance
+        self.f_h = conveyor_resistances.resistance_main(q_m=self.q_m, q_b=self.q_b, q_ro=self.q_ro, q_ru=self.q_ru,
+                                                        c_l=self.c_l, install_a=self.install_a, ff=self.ff)
+
+        # Fst: Resistance due to gravity of the conveyed material
+        self.f_st = conveyor_resistances.resistance_gravity(q_m=self.q_m, H=0)
+
+        # Fba: Resistance due to inertial and frictional forces
+        self.q_v = belt_capacity.volume_carried_material(q=self.q, p=self.p)
+        self.f_ba = conveyor_resistances.resistance_inertial_friction(q_v=self.q_v, p=self.p, v=self.v, v_0=self.v_0)
+
+        # Ff: Resistance between handled material and skirtplates in acceleration area
+        self.f_f = conveyor_resistances.resistance_material_acceleration(q_v=self.q_v, p=self.p, v=self.v, v_0=self.v_0,
+                                                                         b1=self.b1, mu1=self.mu1, mu2=self.mu2)
