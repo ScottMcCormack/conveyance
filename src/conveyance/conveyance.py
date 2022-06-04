@@ -1,6 +1,6 @@
 import yaml
 
-from conveyance import belt_capacity, conveyor_resistances
+from conveyance import belt_capacity, conveyor_resistances, power_requirements
 
 
 class Conveyance:
@@ -28,6 +28,36 @@ class Conveyance:
 
         # Calculate conveyor design
         self._calculate_conveyor_design()
+
+    def calculate_iso_method(self):
+        """Calculate using the ISO method
+
+        """
+        # Min tensile force to transmit f_u (drive pulley)
+        self.t_d_1, self.t_d_2, self.t_d_rat = conveyor_resistances.tension_transmit_min(f_u=self.f_u, wrap_a=self.wrap_a, mu_b=self.mu_b)
+
+        # Min tensile force to avoid belt sag (tail pulley)
+        self.t_t_1, self.t_t_2, self.t_t_rat = conveyor_resistances.tension_transmit_min(f_u=self.f_u, wrap_a=self.wrap_a, mu_b=self.mu_b,
+                                                                                         t_2_min=self.f_bs_min_o)
+        # Drive pulley tension
+        self.f_1t_d = conveyor_resistances.resistance_belt_wrap_iso(B=self.B, d=self.d, D=self.D_d, d_0=self.d_0_d,
+                                                                    m_p=self.m_p_d, t_1=self.t_t_1, t_2=self.t_t_2)
+
+        # Tail pulley tension
+        self.f_1t_t = conveyor_resistances.resistance_belt_wrap_iso(B=self.B, d=self.d, D=self.D_t, d_0=self.d_0_t,
+                                                                    m_p=self.m_p_t, t_1=self.t_t_2, t_2=self.t_t_2)
+
+        # Calculate secondary resistance
+        self.f_n = conveyor_resistances.resistance_secondary(q_v=self.q_v, p=self.p, v=self.v, v_0=self.v_0,
+                                                             B=self.B, b1=self.b1, mu1=self.mu1, mu2=self.mu2,
+                                                             wrap_a_h=self.wrap_a, wrap_a_t=self.wrap_a,
+                                                             f_1t_d=self.f_1t_d, f_1t_t=self.f_1t_t)
+
+        # f_u: Peripheral driving force on driving pulley
+        self.f_u = self.f_h + self.f_n + self.f_s + self.f_st
+
+        # Recalculate the drive motor power requirements
+        self.p_m = power_requirements.power_requirements_motor(f_u=self.f_u, v=self.v, d_eta_1=self.d_eta_1, d_eta_2=self.d_eta_2)
 
     def _file_loader(self, file_path):
         """Load the design parameters from a YAML file.
@@ -142,3 +172,38 @@ class Conveyance:
         # Ff: Resistance between handled material and skirtplates in acceleration area
         self.f_f = conveyor_resistances.resistance_material_acceleration(q_v=self.q_v, p=self.p, v=self.v, v_0=self.v_0,
                                                                          b1=self.b1, mu1=self.mu1, mu2=self.mu2)
+
+        # f_1t: Wrap resistance between the belt and the pulleys
+        self.f_1t = conveyor_resistances.resistance_belt_wrap(B=self.B, wrap_a=self.wrap_a)
+
+        # f_n: Calculate secondary resistances (Fn)
+        self.f_n = conveyor_resistances.resistance_secondary(q_v=self.q_v, p=self.p, v=self.v, v_0=self.v_0,
+                                                             B=self.B, b1=self.b1, mu1=self.mu1, mu2=self.mu2,
+                                                             wrap_a_h=self.wrap_a, wrap_a_t=self.wrap_a)
+
+        # f_gl: Resistance due to friction between the material handled and skirt plates
+        self.f_gl = conveyor_resistances.resistance_material_skirtplates(q_v=self.q_v, p=self.p, v=self.v, l_s=self.l_s, b1=self.b1,
+                                                                         mu2=self.mu2)
+
+        # Determine belt sag tension force
+        self.f_bs_min_o, self.f_bs_min_u = conveyor_resistances.resistance_belt_sag_tension(q_m=self.q_m, q_b=self.q_b, a_o=self.a_o, a_u=self.a_u,
+                                                                                            h_a_o=self.h_a_o, h_a_u=self.h_a_u)
+
+        # f_rc: Friction resistance due to belt cleaners fitted to the conveyor
+        self.f_rc = conveyor_resistances.resistance_belt_cleaners(bc_w=self.bc_w, bc_t=self.bc_t, bc_p=self.bc_p,
+                                                                  bc_n=self.bc_n, mu3=self.mu3)
+
+        # f_s: Special resistances
+        self.f_s = conveyor_resistances.resistance_concentrated(q_v=self.q_v, p=self.p, v=self.v, l_s=self.l_s, b1=self.b1,
+                                                                bc_w=self.bc_w, bc_t=self.bc_t, bc_p=self.bc_p,
+                                                                bc_n=self.bc_n, mu3=self.mu3, mu2=self.mu2)
+
+        # f_u: Peripheral driving force on driving pulley
+        self.f_u = self.f_h + self.f_n + self.f_s + self.f_st
+
+        # Calculate the drive motor power requirements
+        self.p_m = power_requirements.power_requirements_motor(f_u=self.f_u, v=self.v, d_eta_1=self.d_eta_1, d_eta_2=self.d_eta_2)
+
+
+
+
