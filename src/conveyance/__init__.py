@@ -1,1 +1,1 @@
-from .conveyance import Conveyance
+from .conveyance import Conveyance  # noqa: F401
