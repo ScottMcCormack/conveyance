@@ -196,9 +196,9 @@ class Conveyance:
                                                                   bc_n=self.bc_n, mu3=self.mu3)
 
         # f_s: Special resistances
-        self.f_s = conveyor_resistances.resistance_concentrated(q_v=self.q_v, p=self.p, v=self.v, l_s=self.l_s, b1=self.b1,
-                                                                bc_w=self.bc_w, bc_t=self.bc_t, bc_p=self.bc_p,
-                                                                bc_n=self.bc_n, mu3=self.mu3, mu2=self.mu2)
+        self.f_s = self.resistance_concentrated(q_v=self.q_v, p=self.p, v=self.v, l_s=self.l_s, b1=self.b1,
+                                                bc_w=self.bc_w, bc_t=self.bc_t, bc_p=self.bc_p,
+                                                bc_n=self.bc_n, mu3=self.mu3, mu2=self.mu2)
 
         # f_u: Peripheral driving force on driving pulley
         self.f_u = self.f_h + self.f_n + self.f_s + self.f_st
@@ -262,3 +262,56 @@ class Conveyance:
 
         f_n = f_ba + f_f + f_1t_d + f_1t_t
         return f_n
+
+    def resistance_concentrated(self, q_v, p, v, l_s, b1, bc_w, bc_t, bc_p, bc_n, mu2, mu3):
+        """
+        Calculate concentrated local resistances on the conveyor (:math:`F_S`)
+
+            .. math::
+                F_S = F_{\\epsilon} + F_{gL} + F_{rc} + F_a
+
+        Parameters
+        ----------
+        q_v : float
+            :math:`q_v` : Volume per second of material carried (:math:`m^3/s`)
+        p : float
+            :math:`\\rho` : Density of the material (:math:`t/m^3`)
+        v : float
+            :math:`v` : Speed of the conveyor belt (:math:`m/s`)
+        l_s : float
+            :math:`l_s` : Length of installation fitted with skirtplates (:math:`m`)
+        b1 : float
+            :math:`b_1` : Width between skirtplates (:math:`m`)
+        bc_w : float
+            :math:`bc_w` : Belt cleaner width (:math:`m`)
+        bc_t : float
+            :math:`bc_t` : Belt cleaner thickness (:math:`m`)
+        bc_p : float
+            :math:`bc_p` : Pressure between cleaner and belt (:math:`N/m^2`)
+        bc_n : int
+            :math:`bc_n` : Number of belt cleaners
+        mu2 : float
+            :math:`\\mu_2` : Friction coefficient between material/skirtplates
+        mu3 : float
+            :math:`\\mu_3` : Friction coefficient between belt and cleaner
+
+        Returns
+        -------
+        float
+            :math:`F_S` : Conveyor concentrated resistances (:math:`N`)
+
+        """
+        # Resistance due to idler tilting (Fep)
+        f_ep = 0  # No idler tilting
+
+        # Resistance due to friction between the material handled and skirt plates (FgL)
+        self.f_gl = conveyor_resistances.resistance_material_skirtplates(q_v=q_v, p=p, v=v, l_s=l_s, b1=b1, mu2=mu2)
+
+        # Resistance due to belt cleaners fitted to the conveyor (Frc)
+        self.f_rc = conveyor_resistances.resistance_belt_cleaners(bc_w=bc_w, bc_t=bc_t, bc_p=bc_p, bc_n=bc_n, mu3=mu3)
+
+        # Resistance due to friction at a discharge plough (Fa)
+        f_a = 0  # No discharge ploughs present
+
+        f_s = f_ep + self.f_gl + self.f_rc + f_a
+        return f_s

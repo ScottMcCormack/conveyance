@@ -37,60 +37,6 @@ def resistance_main(q_m, q_b, q_ro, q_ru, c_l, install_a, ff):
     return f_h
 
 
-def resistance_concentrated(q_v, p, v, l_s, b1, bc_w, bc_t, bc_p, bc_n, mu2, mu3):
-    """
-    Calculate concentrated local resistances on the conveyor (:math:`F_S`)
-
-        .. math::
-            F_S = F_{\\epsilon} + F_{gL} + F_{rc} + F_a
-
-    Parameters
-    ----------
-    q_v : float
-        :math:`q_v` : Volume per second of material carried (:math:`m^3/s`)
-    p : float
-        :math:`\\rho` : Density of the material (:math:`t/m^3`)
-    v : float
-        :math:`v` : Speed of the conveyor belt (:math:`m/s`)
-    l_s : float
-        :math:`l_s` : Length of installation fitted with skirtplates (:math:`m`)
-    b1 : float
-        :math:`b_1` : Width between skirtplates (:math:`m`)
-    bc_w : float
-        :math:`bc_w` : Belt cleaner width (:math:`m`)
-    bc_t : float
-        :math:`bc_t` : Belt cleaner thickness (:math:`m`)
-    bc_p : float
-        :math:`bc_p` : Pressure between cleaner and belt (:math:`N/m^2`)
-    bc_n : int
-        :math:`bc_n` : Number of belt cleaners
-    mu2 : float
-        :math:`\\mu_2` : Friction coefficient between material/skirtplates
-    mu3 : float
-        :math:`\\mu_3` : Friction coefficient between belt and cleaner
-
-    Returns
-    -------
-    float
-        :math:`F_S` : Conveyor concentrated resistances (:math:`N`)
-
-    """
-    # Resistance due to idler tilting (Fep)
-    f_ep = 0  # No idler tilting
-
-    # Resistance due to friction between the material handled and skirt plates (FgL)
-    f_gl = resistance_material_skirtplates(q_v=q_v, p=p, v=v, l_s=l_s, b1=b1, mu2=mu2)
-
-    # Resistance due to belt cleaners fitted to the conveyor (Frc)
-    f_rc = resistance_belt_cleaners(bc_w=bc_w, bc_t=bc_t, bc_p=bc_p, bc_n=bc_n, mu3=mu3)
-
-    # Resistance due to friction at a discharge plough (Fa)
-    f_a = 0  # No discharge ploughs present
-
-    f_s = f_ep + f_gl + f_rc + f_a
-    return f_s
-
-
 def resistance_gravity(q_m, H):
     """
     Calculate the gravity forces from the conveyed material on the belt (:math:`F_{st}`)
