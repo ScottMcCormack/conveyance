@@ -1,5 +1,7 @@
 import yaml
 
+from conveyance import belt_capacity, conveyor_resistances, power_requirements
+
 
 class Conveyance:
     """Class used for conveyor design.
@@ -10,14 +12,57 @@ class Conveyance:
     ----------
     file_path : str
         Path to file containing the design parameters for the conveyor.
+    q : float
+        Target conveyor throughput (:math:`t/h`)
 
     """
 
-    def __init__(self, file_path):
+    def __init__(self, file_path, q):
+        self.q = q
+
+        # Load design parameters
         self._file_loader(file_path=file_path)
 
+        # Calculate cross-section
+        self._calculate_cross_sectional_capacity()
+
+        # Calculate conveyor design
+        self._calculate_conveyor_design()
+
+    def calculate_iso_method(self):
+        """
+        Calculate using the ISO method
+
+        """
+        # Min tensile force to transmit f_u (drive pulley)
+        self.t_d_1, self.t_d_2, self.t_d_rat = conveyor_resistances.tension_transmit_min(f_u=self.f_u, wrap_a=self.wrap_a, mu_b=self.mu_b)
+
+        # Min tensile force to avoid belt sag (tail pulley)
+        self.t_t_1, self.t_t_2, self.t_t_rat = conveyor_resistances.tension_transmit_min(f_u=self.f_u, wrap_a=self.wrap_a, mu_b=self.mu_b,
+                                                                                         t_2_min=self.f_bs_min_o)
+        # Drive pulley tension
+        self.f_1t_d = conveyor_resistances.resistance_belt_wrap_iso(B=self.B, d=self.d, D=self.D_d, d_0=self.d_0_d,
+                                                                    m_p=self.m_p_d, t_1=self.t_t_1, t_2=self.t_t_2)
+
+        # Tail pulley tension
+        self.f_1t_t = conveyor_resistances.resistance_belt_wrap_iso(B=self.B, d=self.d, D=self.D_t, d_0=self.d_0_t,
+                                                                    m_p=self.m_p_t, t_1=self.t_t_2, t_2=self.t_t_2)
+
+        # Calculate secondary resistance
+        self.f_n = self.resistance_secondary(q_v=self.q_v, p=self.p, v=self.v, v_0=self.v_0,
+                                             B=self.B, b1=self.b1, mu1=self.mu1, mu2=self.mu2,
+                                             wrap_a_h=self.wrap_a, wrap_a_t=self.wrap_a,
+                                             f_1t_d=self.f_1t_d, f_1t_t=self.f_1t_t)
+
+        # f_u: Peripheral driving force on driving pulley
+        self.f_u = self.f_h + self.f_n + self.f_s + self.f_st
+
+        # Recalculate the drive motor power requirements
+        self.p_m = power_requirements.power_requirements_motor(f_u=self.f_u, v=self.v, d_eta_1=self.d_eta_1, d_eta_2=self.d_eta_2)
+
     def _file_loader(self, file_path):
-        """Load the design parameters from a YAML file.
+        """
+        Load the design parameters from a YAML file.
 
         .. versionadded:: 0.1.0
 
@@ -98,3 +143,164 @@ class Conveyance:
         self.d_0_t = tail_pulley['d_0']  # Diameter of inside bearing
         self.D_t = tail_pulley['D']  # Tail pulley diameter
         self.m_p_t = tail_pulley['m_p']  # Tail pulley mass
+
+    def _calculate_cross_sectional_capacity(self):
+        """
+        Calculate the cross-sectional properties of the conveyor
+
+        """
+        self.s = belt_capacity.belt_cs_area(l3=self.l3, b=self.b, ia=self.ia, sa=self.sa)
+        self.q_vt = belt_capacity.volumetric_flow(belt_ca=self.s, v=self.v)
+        self.q_mt = belt_capacity.mass_density_material(v=self.v, q_v=self.q_vt, p=self.p)
+
+    def _calculate_conveyor_design(self):
+        """
+        Calculate the design of the conveyor
+
+        """
+        self.q_m = belt_capacity.mass_density_material(v=self.v, q=self.q)
+        self.q_ro = belt_capacity.mass_density_idler(a=self.a_o, m=self.m_o)
+        self.q_ru = belt_capacity.mass_density_idler(a=self.a_u, m=self.m_u)
+
+        # Fh: Conveyor main resistance
+        self.f_h = conveyor_resistances.resistance_main(q_m=self.q_m, q_b=self.q_b, q_ro=self.q_ro, q_ru=self.q_ru,
+                                                        c_l=self.c_l, install_a=self.install_a, ff=self.ff)
+
+        # Fst: Resistance due to gravity of the conveyed material
+        self.f_st = conveyor_resistances.resistance_gravity(q_m=self.q_m, H=0)
+
+        # Fba: Resistance due to inertial and frictional forces
+        self.q_v = belt_capacity.volume_carried_material(q=self.q, p=self.p)
+
+        # f_1t: Wrap resistance between the belt and the pulleys
+        self.f_1t = conveyor_resistances.resistance_belt_wrap(B=self.B, wrap_a=self.wrap_a)
+
+        # f_n: Calculate secondary resistances (Fn)
+        self.f_n = self.resistance_secondary(q_v=self.q_v, p=self.p, v=self.v, v_0=self.v_0,
+                                             B=self.B, b1=self.b1, mu1=self.mu1, mu2=self.mu2,
+                                             wrap_a_h=self.wrap_a, wrap_a_t=self.wrap_a)
+
+        # Determine belt sag tension force
+        self.f_bs_min_o, self.f_bs_min_u = conveyor_resistances.resistance_belt_sag_tension(q_m=self.q_m, q_b=self.q_b, a_o=self.a_o, a_u=self.a_u,
+                                                                                            h_a_o=self.h_a_o, h_a_u=self.h_a_u)
+
+        # f_s: Special resistances
+        self.f_s = self.resistance_concentrated(q_v=self.q_v, p=self.p, v=self.v, l_s=self.l_s, b1=self.b1,
+                                                bc_w=self.bc_w, bc_t=self.bc_t, bc_p=self.bc_p,
+                                                bc_n=self.bc_n, mu3=self.mu3, mu2=self.mu2)
+
+        # f_u: Peripheral driving force on driving pulley
+        self.f_u = self.f_h + self.f_n + self.f_s + self.f_st
+
+        # Calculate the drive motor power requirements
+        self.p_m = power_requirements.power_requirements_motor(f_u=self.f_u, v=self.v, d_eta_1=self.d_eta_1, d_eta_2=self.d_eta_2)
+
+    def resistance_secondary(self, q_v, p, v, v_0, B, b1, mu1, mu2, wrap_a_h, wrap_a_t,
+                             f_1t_d=None, f_1t_t=None):
+        """
+        Calculate the conveyor secondary resistances (:math:`F_N`)
+
+            .. math::
+                F_N = F_{bA} + F_f + F_1 + F_t
+
+        Parameters
+        ----------
+        q_v : float
+            :math:`q_v` : Volume per second of material carried (:math:`m^3/s`)
+        p : float
+            :math:`\\rho` : Density of the material (:math:`t/m^3`)
+        v : float
+            :math:`v` : Speed of the conveyor belt (:math:`m/s`)
+        v_0 : float
+            :math:`v_0` : Speed of the material dropped on to the belt, in the direction of the belt movement (:math:`m/s`)
+        B:  float
+            :math:`B` : Total width of belt (:math:`m`)
+        b1 : float
+            :math:`b_1` : Width between skirtplates (:math:`m`)
+        mu1 : float
+            :math:`\\mu_1` : Friction coefficient between material/belt
+        mu2 : float
+            :math:`\\mu_2` : Friction coefficient between material/skirtplates
+        wrap_a_h : float
+            :math:`\\theta_h` : Wrap angle around the head pulley (:math:`deg`)
+        wrap_a_t : float
+            :math:`\\theta_t` : Wrap angle around the tail pulley (:math:`deg`)
+        f_1t_d : float, optional
+            :math:`f_{1t,d}` : Wrap resistance between the belt and the drive pulley (:math:`N`)
+        f_1t_t : float, optional
+            :math:`f_{1t,t}` : Wrap resistance between the belt and the tail pulley (:math:`N`)
+
+        Returns
+        -------
+        float
+            :math:`F_N` : Secondary resistances due to inertial and material and belt frictions (:math:`N`)
+
+        """
+        # Inertial and friction resistances (FbA)
+        self.f_ba = conveyor_resistances.resistance_inertial_friction(q_v=q_v, p=p, v=v, v_0=v_0)
+
+        # Resistance between handled material and skirtplates in acceleration area (Ff)
+        self.f_f = conveyor_resistances.resistance_material_acceleration(q_v=q_v, p=p, v=v, v_0=v_0,
+                                                                         b1=b1, mu1=mu1, mu2=mu2)
+
+        # Wrap resistance between the belt and the pulleys (F1t)
+        if not f_1t_d:
+            f_1t_d = conveyor_resistances.resistance_belt_wrap(B=B, wrap_a=wrap_a_h)  # Drive pulley
+        if not f_1t_t:
+            f_1t_t = conveyor_resistances.resistance_belt_wrap(B=B, wrap_a=wrap_a_t)  # Tail pulley
+
+        f_n = self.f_ba + self.f_f + f_1t_d + f_1t_t
+        return f_n
+
+    def resistance_concentrated(self, q_v, p, v, l_s, b1, bc_w, bc_t, bc_p, bc_n, mu2, mu3):
+        """
+        Calculate concentrated local resistances on the conveyor (:math:`F_S`)
+
+            .. math::
+                F_S = F_{\\epsilon} + F_{gL} + F_{rc} + F_a
+
+        Parameters
+        ----------
+        q_v : float
+            :math:`q_v` : Volume per second of material carried (:math:`m^3/s`)
+        p : float
+            :math:`\\rho` : Density of the material (:math:`t/m^3`)
+        v : float
+            :math:`v` : Speed of the conveyor belt (:math:`m/s`)
+        l_s : float
+            :math:`l_s` : Length of installation fitted with skirtplates (:math:`m`)
+        b1 : float
+            :math:`b_1` : Width between skirtplates (:math:`m`)
+        bc_w : float
+            :math:`bc_w` : Belt cleaner width (:math:`m`)
+        bc_t : float
+            :math:`bc_t` : Belt cleaner thickness (:math:`m`)
+        bc_p : float
+            :math:`bc_p` : Pressure between cleaner and belt (:math:`N/m^2`)
+        bc_n : int
+            :math:`bc_n` : Number of belt cleaners
+        mu2 : float
+            :math:`\\mu_2` : Friction coefficient between material/skirtplates
+        mu3 : float
+            :math:`\\mu_3` : Friction coefficient between belt and cleaner
+
+        Returns
+        -------
+        float
+            :math:`F_S` : Conveyor concentrated resistances (:math:`N`)
+
+        """
+        # Resistance due to idler tilting (Fep)
+        f_ep = 0  # No idler tilting
+
+        # Resistance due to friction between the material handled and skirt plates (FgL)
+        self.f_gl = conveyor_resistances.resistance_material_skirtplates(q_v=q_v, p=p, v=v, l_s=l_s, b1=b1, mu2=mu2)
+
+        # Resistance due to belt cleaners fitted to the conveyor (Frc)
+        self.f_rc = conveyor_resistances.resistance_belt_cleaners(bc_w=bc_w, bc_t=bc_t, bc_p=bc_p, bc_n=bc_n, mu3=mu3)
+
+        # Resistance due to friction at a discharge plough (Fa)
+        f_a = 0  # No discharge ploughs present
+
+        f_s = f_ep + self.f_gl + self.f_rc + f_a
+        return f_s
