@@ -13,7 +13,7 @@ class Conveyance:
     file_path : str
         Path to file containing the design parameters for the conveyor.
     q : float
-        Target capacity
+        Target conveyor throughput (:math:`t/h`)
 
     """
 
@@ -30,7 +30,8 @@ class Conveyance:
         self._calculate_conveyor_design()
 
     def calculate_iso_method(self):
-        """Calculate using the ISO method
+        """
+        Calculate using the ISO method
 
         """
         # Min tensile force to transmit f_u (drive pulley)
@@ -60,7 +61,8 @@ class Conveyance:
         self.p_m = power_requirements.power_requirements_motor(f_u=self.f_u, v=self.v, d_eta_1=self.d_eta_1, d_eta_2=self.d_eta_2)
 
     def _file_loader(self, file_path):
-        """Load the design parameters from a YAML file.
+        """
+        Load the design parameters from a YAML file.
 
         .. versionadded:: 0.1.0
 
